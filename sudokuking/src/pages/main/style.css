@@ -1,0 +1,44 @@
+div.game{
+    display: flex;
+    flex-flow: column;
+}
+
+div#game-page{
+    width: 100%;
+    padding: 0 15%;
+    border: 1px solid black;
+}
+div#game-header{
+    margin: 10px 0 10px;
+    border:1px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+div#game-display{
+    background-color: grey;
+    margin: 5px 0 10px;
+    text-align: center;
+}
+
+div#game-board{
+    border: 1px solid black;
+    margin: 5px 0 10px;
+    height: 350px;
+}
+
+div#game-board p{
+    display: inline-block;
+    vertical-align: middle;
+    color: red;
+}
+
+div#game-controller{
+    border: 1px solid black;
+    height: 80px;
+}
+
+/*div#game-board{
+    border: 1px solid black;
+}*/
