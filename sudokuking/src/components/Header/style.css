@@ -41,3 +41,7 @@ select#lang-select{
     border: none;
 }
 
+select#lang-select:hover{
+    cursor: pointer;
+}
+

@@ -5,6 +5,7 @@ div.game{
 
 div#game-page{
     width: 100%;
+    height: 100%;
     padding: 0 15%;
     border: 1px solid black;
 }
@@ -25,7 +26,7 @@ div#game-display{
 div#game-board{
     border: 1px solid black;
     margin: 5px 0 10px;
-    height: 350px;
+    /*height: 400px;*/
 }
 
 div#game-board p{
@@ -36,7 +37,7 @@ div#game-board p{
 
 div#game-controller{
     border: 1px solid black;
-    height: 80px;
+    /*height: 80px;*/
 }
 
 /*div#game-board{
