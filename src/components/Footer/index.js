@@ -8,11 +8,11 @@ const Footer = () => (
         <div id='master-footer'>
             <p>Sudoku King, developed by<br />Marcus Castanho</p>
             <div id='links'>
-                <a href='https://linkedin.com/in/marcus-castanho-b52199114' target='_blank'>
-                    <img src={linkedinLogo} />
+                <a href='https://linkedin.com/in/marcus-castanho-b52199114' target='_blank' rel="noopener noreferrer">
+                    <img src={linkedinLogo} alt='linkedinLogo' />
                 </a>
-                <a href="https://github.com/marcus-castanho" target='_blank'>
-                    <img src={githubLogo} />
+                <a href="https://github.com/marcus-castanho" target='_blank' rel="noopener noreferrer">
+                    <img src={githubLogo} alt='githubLogo' />
                 </a>
             </div>
         </div>
