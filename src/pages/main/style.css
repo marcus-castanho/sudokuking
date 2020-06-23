@@ -23,6 +23,18 @@ div#game-header{
     align-items: center;
 }
 
+div#game-info{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+div#timer{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+}
+
 div#game-display{
     /*border: 1px solid black;*/
     /*background-color: grey;*/
