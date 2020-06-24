@@ -1,6 +1,6 @@
 generateRamdomGame = async () => {
     var matrix = [];
-    var squareIndex = {
+    var squareElements = {
         square0: ["00", "01", "02", "10", "11", "12", "20", "21", "22"],
         square1: ["03", "04", "05", "13", "14", "15", "23", "24", "25"],
         square2: ["06", "07", "08", "16", "17", "18", "26", "27", "28"],
@@ -24,20 +24,44 @@ generateRamdomGame = async () => {
     for (i = 0; i < 9; i++) {
         matrix[i] = [];
         for (j = 0; j < 9; j++) {
-            const possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            var elementIndex = "" + i + j;
+            var t = 0;
+            /*for (t = 0; t < 9; t++) {
+                if (squareElements.["square" + i].includes(elementIndex)===true) {
+                    squareElements.["square" + i]=matrix[i][j];
+                    break;
+                }
+            }*/
+
+            var possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
             const rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
 
-            var t = i;
             var columnpossibilities = [];
             while (t >= 0) {
                 columnpossibilities.push(matrix[t][j]);
                 t -= 1;
             }
-
             columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
 
+            squarepossibilites
 
             possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
+
+            if (possibilities == undefined) {
+                t = 0;
+                for (t = 0; t < j; t++) {
+                    if (columnpossibilities.includes(matrix[i][t]) == true) {
+                        matrix[i][j] = matrix[i][t];
+                        possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+                        rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
+                        columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
+                        possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
+                    }
+                }
+            }
+
+            matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
 
         }
 
