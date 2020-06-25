@@ -11,12 +11,6 @@ generateRamdomGame = async () => {
         square7: ["63", "64", "65", "73", "74", "75", "83", "84", "85"],
         square8: ["66", "67", "68", "76", "77", "78", "86", "87", "88"],
     };
-    var a = 1;
-    var b = 0;
-
-    console.log(a.find(item => (item == 1)));
-
-    console.log(squareIndex.square00.indexOf("" + a + b));
 
     var i = 0;
     var j = 0;
@@ -25,38 +19,47 @@ generateRamdomGame = async () => {
         matrix[i] = [];
         for (j = 0; j < 9; j++) {
             var elementIndex = "" + i + j;
+            var elementSquare = "";
             var t = 0;
-            /*for (t = 0; t < 9; t++) {
-                if (squareElements.["square" + i].includes(elementIndex)===true) {
-                    squareElements.["square" + i]=matrix[i][j];
-                    break;
+            for (t = 0; t < 9; t++) {
+                if (squareElements.square[t].includes(elementIndex) === true) {
+                    elementSquare = t;
                 }
-            }*/
+            }
 
             var possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-            const rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
+            var rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
 
             var columnpossibilities = [];
+            t = i;
             while (t >= 0) {
                 columnpossibilities.push(matrix[t][j]);
                 t -= 1;
             }
             columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
 
-            squarepossibilites
+            var squarepossibilites = possibilities.filter(cell => (!squareElements.square[elementSquare]));
 
             possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
 
-            if (possibilities == undefined) {
+            possibilities = possibilities.filter(x => squarepossibilites.includes(x));
+
+
+            if (possibilities.length === 0) {
                 t = 0;
                 for (t = 0; t < j; t++) {
-                    if (columnpossibilities.includes(matrix[i][t]) == true) {
+                    if (columnpossibilities.includes(matrix[i][t]) == true && squarepossibilites.includes(matrix[i][t])) {
                         matrix[i][j] = matrix[i][t];
                         possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
                         rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
+
                         columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
+
                         possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
+
+                        possibilities = possibilities.filter(x => squarepossibilites.includes(x));
                     }
                 }
             }

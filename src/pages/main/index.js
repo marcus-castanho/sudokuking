@@ -11,7 +11,7 @@ export default class Main extends Component {
     }
 
     generateRamdomGame = async () => {
-        var squareIndex = {
+        var squareElements = {
             square0: ["00", "01", "02", "10", "11", "12", "20", "21", "22"],
             square1: ["03", "04", "05", "13", "14", "15", "23", "24", "25"],
             square2: ["06", "07", "08", "16", "17", "18", "26", "27", "28"],
@@ -29,8 +29,18 @@ export default class Main extends Component {
         for (i = 0; i < 9; i++) {
             matrix[i] = [];
             for (j = 0; j < 9; j++) {
+                /*var elementIndex = "" + i + j;
+                var elementSquare = "";
+                var t = 0;
 
-                var possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+                for (var key in squareElements) {
+                    if (squareElements[key].includes(elementIndex) === true) {
+                        elementSquare = key;
+                    }
+                }*/
+
+
+                var possibilities = [...Array(9).keys()]
 
                 var rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
 
@@ -42,73 +52,71 @@ export default class Main extends Component {
                 }
                 columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
 
-                console.log(columnpossibilities);
-                console.log(rowpossibilities);
-
                 possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
 
+
                 if (possibilities.length === 0) {
-                    console.clear();
                     for (t = 0; t < j; t++) {
                         if (columnpossibilities.includes(matrix[i][t]) === true) {
+
                             matrix[i][j] = matrix[i][t];
-                            possibilities = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+                            possibilities = [...Array(9).keys()];
+
                             rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
+
+                            var k = t;
+                            while (k >= 0) {
+                                columnpossibilities = [];
+                                columnpossibilities.push(matrix[k][t]);
+                                k -= 1;
+                            }
+
                             columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
+
                             possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
-                            break;
+
+                            if (possibilities.length === 0) {
+
+                                matrix[i][j] = []
+
+                                continue
+                            }
+
+                            else {
+                                matrix[i][t] = possibilities[Math.floor(Math.random() * possibilities.length)];
+
+                                console.log(i, t);
+                                console.log('erro');
+                                break;
+                            }
+
                         }
                     }
+                }
+                else {
+                    matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
                 }
 
                 console.log(columnpossibilities);
                 console.log(rowpossibilities);
-
                 console.log(possibilities);
 
-                matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
+
 
                 console.log(matrix[i][j]);
+                //console.log(elementSquare);
+
             }
         }
-
-        /*if (this.checkGame(matrix) == true) {
-            console.clear();
-            this.generateRamdomGame();
-        }*/
 
 
         await this.setState({ gameTable: matrix });
 
     };
 
-    /*checkGame = (matrix) => {
-        var i = 0;
-        var j = 0;
-        var res = false;
-
-        for (i = 0; i < 9; i++) {
-            for (j = 0; j < 9; j++) {
-                if (matrix[i][j] = undefined) {
-                    res = true;
-                    break;
-                }
-            }
-        }
-        if (res = true) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };*/
 
     renderTable = () => {
         const { gameTable } = this.state;
-        //const a = [1,2,3];
-
-        //console.log(a.indexOf());
-
 
         return (
             <tbody>
