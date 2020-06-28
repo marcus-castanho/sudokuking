@@ -4,6 +4,7 @@ import "./style.css"
 export default class Main extends Component {
     state = {
         gameTable: [],
+        redoLimit: "",
     };
 
     componentDidMount() {
@@ -26,94 +27,10 @@ export default class Main extends Component {
         var i = 0;
         var j = 0;
 
-        for (i = 0; i < 9; i++) {
-            matrix[i] = [];
-            for (j = 0; j < 9; j++) {
-                /*var elementIndex = "" + i + j;
-                var elementSquare = "";
-                var t = 0;
-
-                for (var key in squareElements) {
-                    if (squareElements[key].includes(elementIndex) === true) {
-                        elementSquare = key;
-                    }
-                }*/
-
-
-                var possibilities = [...Array(9).keys()]
-
-                var rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
-
-                var columnpossibilities = [];
-                var t = i;
-                while (t >= 0) {
-                    columnpossibilities.push(matrix[t][j]);
-                    t -= 1;
-                }
-                columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
-
-                possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
-
-
-                if (possibilities.length === 0) {
-                    for (t = 0; t < j; t++) {
-                        if (columnpossibilities.includes(matrix[i][t]) === true) {
-
-                            matrix[i][j] = matrix[i][t];
-                            possibilities = [...Array(9).keys()];
-
-                            rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
-
-                            var k = t;
-                            while (k >= 0) {
-                                columnpossibilities = [];
-                                columnpossibilities.push(matrix[k][t]);
-                                k -= 1;
-                            }
-
-                            columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
-
-                            possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
-
-                            if (possibilities.length === 0) {
-
-                                matrix[i][j] = []
-
-                                continue
-                            }
-
-                            else {
-                                matrix[i][t] = possibilities[Math.floor(Math.random() * possibilities.length)];
-
-                                console.log(i, t);
-                                console.log('erro');
-                                break;
-                            }
-
-                        }
-                    }
-                }
-                else {
-                    matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
-                }
-
-                console.log(columnpossibilities);
-                console.log(rowpossibilities);
-                console.log(possibilities);
-
-
-
-                console.log(matrix[i][j]);
-                //console.log(elementSquare);
-
-            }
-        }
-
 
         await this.setState({ gameTable: matrix });
 
     };
-
 
     renderTable = () => {
         const { gameTable } = this.state;
