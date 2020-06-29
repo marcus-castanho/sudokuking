@@ -1,18 +1,13 @@
 generateRamdomGame = async () => {
-    var squareElements = {
-        square0: ["00", "01", "02", "10", "11", "12", "20", "21", "22"],
-        square1: ["03", "04", "05", "13", "14", "15", "23", "24", "25"],
-        square2: ["06", "07", "08", "16", "17", "18", "26", "27", "28"],
-        square3: ["30", "31", "32", "40", "41", "42", "50", "51", "52"],
-        square4: ["33", "34", "35", "43", "44", "45", "53", "54", "55"],
-        square5: ["36", "37", "38", "46", "47", "48", "56", "57", "58"],
-        square6: ["60", "61", "62", "70", "71", "72", "80", "81", "82"],
-        square7: ["63", "64", "65", "73", "74", "75", "83", "84", "85"],
-        square8: ["66", "67", "68", "76", "77", "78", "86", "87", "88"],
-    };
-    var matrix = [];
+
+    var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
     var i = 0;
     var j = 0;
+    var squareElements = {};
+    for (i = 0; i < 9; i++) {
+        var arr = [...Array(9).keys()]
+        squareElements['square' + i] = arr.sort(() => Math.random() - 0.5);
+    }
 
     for (i = 0; i < 9; i++) {
         matrix[i] = [];
@@ -105,45 +100,45 @@ generateRamdomGame = async () => {
 
 };
 
-    redoRow = (matrix, i, j, n) => {
+redoRow = (matrix, i, j, n) => {
 
-        for (j = 0; j < 9; j++) {
+    for (j = 0; j < 9; j++) {
 
-            var possibilities = [...Array(9).keys()]
+        var possibilities = [...Array(9).keys()]
 
-            var rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
+        var rowpossibilities = possibilities.filter(cell => (!matrix[i].includes(cell)));
 
-            var columnpossibilities = [];
-            var t = i;
-            while (t >= 0) {
-                columnpossibilities.push(matrix[t][j]);
-                t -= 1;
-            }
-            columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
-
-            possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
-
-
-            if (possibilities.length === 0) {
-
-                n = async () => {
-                    await this.setState({ redoLimit: this.state.redoLimit + 1 })
-                };
-
-                if (n >= 10) {
-                    matrix = [];
-                    this.generateRamdomGame();
-                }
-
-                console.log(n);
-                matrix[i] = [];
-                this.redoRow(matrix, i, j, n);
-
-            }
-            else {
-                matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
-            }
+        var columnpossibilities = [];
+        var t = i;
+        while (t >= 0) {
+            columnpossibilities.push(matrix[t][j]);
+            t -= 1;
         }
+        columnpossibilities = possibilities.filter(cell => (!columnpossibilities.includes(cell)));
 
-        return matrix[i];
+        possibilities = rowpossibilities.filter(x => columnpossibilities.includes(x));
+
+
+        if (possibilities.length === 0) {
+
+            n = async () => {
+                await this.setState({ redoLimit: this.state.redoLimit + 1 })
+            };
+
+            if (n >= 10) {
+                matrix = [];
+                this.generateRamdomGame();
+            }
+
+            console.log(n);
+            matrix[i] = [];
+            this.redoRow(matrix, i, j, n);
+
+        }
+        else {
+            matrix[i][j] = possibilities[Math.floor(Math.random() * possibilities.length)];
+        }
     }
+
+    return matrix[i];
+}

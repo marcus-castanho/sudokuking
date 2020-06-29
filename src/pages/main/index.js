@@ -11,24 +11,23 @@ export default class Main extends Component {
         this.generateRamdomGame();
     }
 
-    generateRamdomGame = async () => {
-        var squareElements = {
-            square0: ["00", "01", "02", "10", "11", "12", "20", "21", "22"],
-            square1: ["03", "04", "05", "13", "14", "15", "23", "24", "25"],
-            square2: ["06", "07", "08", "16", "17", "18", "26", "27", "28"],
-            square3: ["30", "31", "32", "40", "41", "42", "50", "51", "52"],
-            square4: ["33", "34", "35", "43", "44", "45", "53", "54", "55"],
-            square5: ["36", "37", "38", "46", "47", "48", "56", "57", "58"],
-            square6: ["60", "61", "62", "70", "71", "72", "80", "81", "82"],
-            square7: ["63", "64", "65", "73", "74", "75", "83", "84", "85"],
-            square8: ["66", "67", "68", "76", "77", "78", "86", "87", "88"],
-        };
-        var matrix = [];
+    generateRamdomGame = /*async*/ () => {
+        var arr = [...Array(9).keys()];
+        var matrix = [Array(81).fill()];
         var i = 0;
-        var j = 0;
 
 
-        await this.setState({ gameTable: matrix });
+        for (i = 0; i < 81; i++) {
+            if (i % 9 == 0) {
+                arr = arr.sort(() => Math.random() - 0.5)
+            }
+            var perBox = ((i / 3) % 3) * 9 + ((i % 27) / 9) * 3 + (i / 27) * 27 + (i % 3);
+            matrix[perBox] = arr[i % 9];
+        }
+
+        console.log(matrix);
+
+        //await this.setState({ gameTable: matrix });
 
     };
 
