@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import "./style.css"
+import "./style.css";
+import { makepuzzle, solvepuzzle, ratepuzzle } from "sudoku";
 
 export default class Main extends Component {
     state = {
@@ -11,23 +12,21 @@ export default class Main extends Component {
         this.generateRamdomGame();
     }
 
-    generateRamdomGame = /*async*/ () => {
-        var arr = [...Array(9).keys()];
-        var matrix = [Array(81).fill()];
-        var i = 0;
+    generateRamdomGame = async () => {
+
+        var puzzle = makepuzzle();
+
+        console.log(puzzle);
+
+        var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
+        var n = 9;
+
+        matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
+
+        //console.log(ratepuzzle(makepuzzle(),3));
 
 
-        for (i = 0; i < 81; i++) {
-            if (i % 9 == 0) {
-                arr = arr.sort(() => Math.random() - 0.5)
-            }
-            var perBox = ((i / 3) % 3) * 9 + ((i % 27) / 9) * 3 + (i / 27) * 27 + (i % 3);
-            matrix[perBox] = arr[i % 9];
-        }
-
-        console.log(matrix);
-
-        //await this.setState({ gameTable: matrix });
+        await this.setState({ gameTable: matrix });
 
     };
 
