@@ -1,30 +1,68 @@
 import React, { Component } from "react";
 import "./style.css";
-import { makepuzzle, solvepuzzle, ratepuzzle } from "sudoku";
+import { makepuzzle, solvepuzzle } from "sudoku";
 
 export default class Main extends Component {
     state = {
         gameTable: [],
-        redoLimit: "",
     };
 
     componentDidMount() {
-        this.generateRamdomGame();
+        this.generateRamdomGame(0);
     }
 
-    generateRamdomGame = async () => {
+    generateRamdomGame = async (difficulty) => {
 
-        var puzzle = makepuzzle();
+        var tdiff = 0.26;
 
-        console.log(puzzle);
+        switch (difficulty) {
+            case 0:
+                while (tdiff >= 0.25) {
+                    var puzzle = makepuzzle();
+
+                    var tinit = performance.now();
+
+                    var solution = solvepuzzle(puzzle);
+
+                    var tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+            case 1:
+                while (tdiff < 0.25 || tdiff >= 0.4) {
+                    var puzzle = makepuzzle();
+
+                    var tinit = performance.now();
+
+                    var solution = solvepuzzle(puzzle);
+
+                    var tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+            case 2:
+                while (tdiff < 0.4 || tdiff >= 0.5) {
+                    var puzzle = makepuzzle();
+
+                    var tinit = performance.now();
+
+                    var solution = solvepuzzle(puzzle);
+
+                    var tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+        }
+        
+
+        console.log(solution);
+
+        puzzle = puzzle.map(cell => ({ value: cell, id: puzzle.indexOf(cell) }));
 
         var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
         var n = 9;
 
         matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
-
-        //console.log(ratepuzzle(makepuzzle(),3));
-
 
         await this.setState({ gameTable: matrix });
 
@@ -36,9 +74,9 @@ export default class Main extends Component {
         return (
             <tbody>
                 {gameTable.map(row => (
-                    <tr className="game-row">
+                    <tr className="game-row" key={gameTable.indexOf(row)}>
                         {row.map(cell => (
-                            <td className="game-cell" id={gameTable.indexOf(row) + row.indexOf(cell)}>{cell}</td>
+                            <td className="game-cell" id={"" + gameTable.indexOf(row) + row.indexOf(cell)} key={"" + gameTable.indexOf(row) + row.indexOf(cell)}>{cell.value}</td>
                         ))}
                     </tr>
                 ))}
@@ -60,11 +98,7 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <select>
-                                <option value='new-game'>
-                                    New Game
-                            </option>
-                            </select>
+                            <button id='btn-newgame' onClick={this.generateRamdomGame(0)}>New Game</button>
                         </div>
                     </div>
                     <div id='game-display'>
