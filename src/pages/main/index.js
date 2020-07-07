@@ -1,60 +1,102 @@
 import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
+import { Timer } from "easytimer.js";
 
 export default class Main extends Component {
     state = {
         gameTable: [],
+        currentDifficulty: '',
+        currentTime: [],
     };
 
     componentDidMount() {
-        this.generateRamdomGame(0);
+        this.generateRamdomGame('easy');
+        this.controlTimer('start');
     }
 
-    generateRamdomGame = async (difficulty) => {
+    controlTimer = async (action) => {
+        var timer = new Timer();
 
-        var tdiff = 0.26;
+        switch (action) {
+            case 'start':
+                timer.start();
+                return await this.setState({
+                    currentTime: timer.getTimeValues().toString()
+                })
+            case 'pause':
 
-        switch (difficulty) {
-            case 0:
-                while (tdiff >= 0.25) {
-                    var puzzle = makepuzzle();
-
-                    var tinit = performance.now();
-
-                    var solution = solvepuzzle(puzzle);
-
-                    var tend = performance.now();
-                    tdiff = tend - tinit;
-                }
                 break;
-            case 1:
-                while (tdiff < 0.25 || tdiff >= 0.4) {
-                    var puzzle = makepuzzle();
+            case 'stop':
 
-                    var tinit = performance.now();
-
-                    var solution = solvepuzzle(puzzle);
-
-                    var tend = performance.now();
-                    tdiff = tend - tinit;
-                }
                 break;
-            case 2:
-                while (tdiff < 0.4 || tdiff >= 0.5) {
-                    var puzzle = makepuzzle();
+            case 'reset':
 
-                    var tinit = performance.now();
-
-                    var solution = solvepuzzle(puzzle);
-
-                    var tend = performance.now();
-                    tdiff = tend - tinit;
-                }
+                break;
+            default:
                 break;
         }
-        
 
+    };
+
+    renderTimer = () => {
+        const { currentTime } = this.state;
+        var timer = new Timer();
+
+        return (
+            <p id='time'>{timer.addEventListener('secondUpdated', currentTime)}</p>
+        )
+    };
+
+    generateRamdomGame = async (difficulty) => {
+        var puzzle = '';
+        var tinit = '';
+        var solution = '';
+        var tend = '';
+        var tdiff = 100;
+
+        switch (difficulty) {
+            case 'easy':
+                while (tdiff >= 0.25) {
+                    puzzle = new makepuzzle();
+
+                    tinit = performance.now();
+
+                    solution = new solvepuzzle(puzzle);
+
+                    tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+            case 'medium':
+                while (tdiff < 0.25 || tdiff >= 0.4) {
+                    puzzle = new makepuzzle();
+
+                    tinit = performance.now();
+
+                    solution = new solvepuzzle(puzzle);
+
+                    tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+            case 'hard':
+                while (tdiff < 0.4 || tdiff >= 0.5) {
+                    puzzle = new makepuzzle();
+
+                    tinit = performance.now();
+
+                    solution = new solvepuzzle(puzzle);
+
+                    tend = performance.now();
+                    tdiff = tend - tinit;
+                }
+                break;
+            default:
+                break;
+        }
+
+        console.log(tdiff);
         console.log(solution);
 
         puzzle = puzzle.map(cell => ({ value: cell, id: puzzle.indexOf(cell) }));
@@ -64,7 +106,7 @@ export default class Main extends Component {
 
         matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
 
-        await this.setState({ gameTable: matrix });
+        await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
 
     };
 
@@ -91,14 +133,14 @@ export default class Main extends Component {
                 <div id='game-page'>
                     <div id='game-header'>
                         <div id='game-info'>
-                            <p>Difficulty</p>
+                            <p id='difficulty'>{this.state.currentDifficulty}</p>
                             <div id='timer'>
-                                <p id='time'>10:00:00</p>
+                                {this.renderTimer()}
                                 <button id="play-pause-btn">o-</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={this.generateRamdomGame(0)}>New Game</button>
+                            <button id='btn-newgame' onClick={() => this.generateRamdomGame('easy')}>New Game</button>
                         </div>
                     </div>
                     <div id='game-display'>
