@@ -2,51 +2,50 @@ import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { Timer } from "easytimer.js";
+import { ms } from "pretty-ms"
 
 export default class Main extends Component {
     state = {
         gameTable: [],
         currentDifficulty: '',
-        currentTime: [],
+        timeData: { time: 0, isOn: false, start: 0 },
     };
+
 
     componentDidMount() {
         this.generateRamdomGame('easy');
-        this.controlTimer('start');
+        this.startTimer = this.startTimer.bind(this);
+        this.stopTimer = this.stopTimer.bind(this);
+        this.resetTimer = this.resetTimer.bind(this);
+
     }
 
-    controlTimer = async (action) => {
-        var timer = new Timer();
+    startTimer = () => {
+        this.setState({
+            timeData: {
+                time: this.state.time,
+                isOn: true,
+                start: Date.now() - this.state.timeData.time
+            }
+        })
+        this.timer = setInterval(() => this.setState({
+            timeData: {
+                time: Date.now() - this.state.timeData.start
+            }
+        }), 1);
 
-        switch (action) {
-            case 'start':
-                timer.start();
-                return await this.setState({
-                    currentTime: timer.getTimeValues().toString()
-                })
-            case 'pause':
-
-                break;
-            case 'stop':
-
-                break;
-            case 'reset':
-
-                break;
-            default:
-                break;
-        }
-
+        setTimeout(console.log(this.state.timeData.time), 10000);
     };
 
-    renderTimer = () => {
-        const { currentTime } = this.state;
-        var timer = new Timer();
-
-        return (
-            <p id='time'>{timer.addEventListener('secondUpdated', currentTime)}</p>
-        )
+    stopTimer = () => {
+        this.setState({ timeData: { isOn: false } })
+        clearInterval(this.timeData.time)
     };
+
+    resetTimer = () => {
+        this.setState({ timeData: { time: 0, isOn: false } })
+    }
+
 
     generateRamdomGame = async (difficulty) => {
         var puzzle = '';
@@ -96,7 +95,6 @@ export default class Main extends Component {
                 break;
         }
 
-        console.log(tdiff);
         console.log(solution);
 
         puzzle = puzzle.map(cell => ({ value: cell, id: puzzle.indexOf(cell) }));
@@ -127,6 +125,20 @@ export default class Main extends Component {
     };
 
     render() {
+        let start = (this.state.timeData.time === 0) ?
+            <button onClick={this.startTimer}>start</button> :
+            null
+        /*let stop = (this.state.timeData.time === 0 || !this.state.timeData.isOn) ?
+            null :
+            <button onClick={this.stopTimer}>stop</button>
+        let resume = (this.state.timeData.time === 0 || this.state.timeData.isOn) ?
+            null :
+            <button onClick={this.startTimer}>resume</button>
+        let reset = (this.state.timeData.time === 0 || this.state.timeData.isOn) ?
+            null :
+            <button onClick={this.resetTimer}>reset</button>*/
+
+
 
         return (
             <div className='game'>
@@ -135,12 +147,12 @@ export default class Main extends Component {
                         <div id='game-info'>
                             <p id='difficulty'>{this.state.currentDifficulty}</p>
                             <div id='timer'>
-                                {this.renderTimer()}
+                                <p>{this.state.timeData.time}</p>
                                 <button id="play-pause-btn">o-</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={() => this.generateRamdomGame('easy')}>New Game</button>
+                            <button id='btn-newgame' onClick={() => { this.generateRamdomGame('easy'); this.startTimer() }}>New Game</button>
                         </div>
                     </div>
                     <div id='game-display'>
