@@ -3,51 +3,75 @@ import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { Timer } from "easytimer.js";
 import { ms } from "pretty-ms"
+//import { Timers } from "./service/Timer"
 
 export default class Main extends Component {
     state = {
         gameTable: [],
         currentDifficulty: '',
         timeData: { time: 0, isOn: false, start: 0 },
+        counter: 0,
     };
-
 
     componentDidMount() {
-        this.generateRamdomGame('easy');
-        this.startTimer = this.startTimer.bind(this);
-        this.stopTimer = this.stopTimer.bind(this);
-        this.resetTimer = this.resetTimer.bind(this);
+        this.generateRamdomGame('hard');
+        this.startTimer = this.startTimer.bind(this)
 
     }
 
-    startTimer = () => {
-        this.setState({
+    startTimer = async () => {
+        var startInstant = Date.now() - this.state.timeData.time;
+
+        await this.setState({
             timeData: {
-                time: this.state.time,
                 isOn: true,
-                start: Date.now() - this.state.timeData.time
+                time: this.state.timeData.time,
+                start: startInstant,
             }
         })
-        this.timer = setInterval(() => this.setState({
+        this.timer = await setInterval(() => this.setState({
             timeData: {
-                time: Date.now() - this.state.timeData.start
+                time: Date.now() - this.state.timeData.start,
+                start: startInstant
             }
         }), 1);
-
-        setTimeout(console.log(this.state.timeData.time), 10000);
+        var btnIcon = document.getElementById("start-stop-btn");
+        btnIcon.innerText = 'stop'
     };
 
-    stopTimer = () => {
-        this.setState({ timeData: { isOn: false } })
-        clearInterval(this.timeData.time)
+    stopTimer = async () => {
+        await this.setState({
+            timeData: {
+                time: this.state.timeData.time,
+                isOn: false
+            }
+        });
+        clearInterval(this.timer);
+        var btnIcon = document.getElementById("start-stop-btn");
+        btnIcon.innerText = 'start'
     };
 
-    resetTimer = () => {
-        this.setState({ timeData: { time: 0, isOn: false } })
-    }
+    resetTimer = async () => {
+        this.stopTimer();
+        await this.setState({ timeData: { time: 0, isOn: false } })
+    };
 
+    msTime = (s) => {
+        var ms = s % 1000;
+        s = (s - ms) / 1000;
+        var secs = s % 60;
+        s = (s - secs) / 60;
+        var mins = s % 60;
+        var hrs = (s - mins) / 60;
+        mins = ("00" + mins).substr(-2);
+        secs = ("00" + secs).substr(-2);
+        hrs = ("00" + hrs).substr(-2);
+        return hrs + ':' + mins + ':' + secs;
+    };
 
     generateRamdomGame = async (difficulty) => {
+        this.startTimer();
+
         var puzzle = '';
         var tinit = '';
         var solution = '';
@@ -96,6 +120,8 @@ export default class Main extends Component {
         }
 
         console.log(solution);
+        console.log(solvepuzzle(puzzle));
+        console.log(solvepuzzle(puzzle));
 
         puzzle = puzzle.map(cell => ({ value: cell, id: puzzle.indexOf(cell) }));
 
@@ -106,6 +132,22 @@ export default class Main extends Component {
 
         await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
 
+    };
+
+    newgame = async (difficulty) => {
+        this.stopTimer();
+        await setTimeout(this.resetTimer(), 1000);
+        this.generateRamdomGame(difficulty);
+    };
+
+    startStopTimer = () => {
+        var btnIcon = document.getElementById('start-stop-btn');
+        switch (btnIcon.innerText) {
+            case 'stop': this.stopTimer();
+                break;
+            case 'start': this.startTimer();
+                break;
+        }
     };
 
     renderTable = () => {
@@ -125,21 +167,7 @@ export default class Main extends Component {
     };
 
     render() {
-        let start = (this.state.timeData.time === 0) ?
-            <button onClick={this.startTimer}>start</button> :
-            null
-        /*let stop = (this.state.timeData.time === 0 || !this.state.timeData.isOn) ?
-            null :
-            <button onClick={this.stopTimer}>stop</button>
-        let resume = (this.state.timeData.time === 0 || this.state.timeData.isOn) ?
-            null :
-            <button onClick={this.startTimer}>resume</button>
-        let reset = (this.state.timeData.time === 0 || this.state.timeData.isOn) ?
-            null :
-            <button onClick={this.resetTimer}>reset</button>*/
-
-
-
+        var t = this.state.timeData.time;
         return (
             <div className='game'>
                 <div id='game-page'>
@@ -147,12 +175,13 @@ export default class Main extends Component {
                         <div id='game-info'>
                             <p id='difficulty'>{this.state.currentDifficulty}</p>
                             <div id='timer'>
-                                <p>{this.state.timeData.time}</p>
-                                <button id="play-pause-btn">o-</button>
+                                <p>{this.msTime(t)}</p>
+                                <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
+                                <button id="play-pause-btn" onClick={() => this.resetTimer()}>reset</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={() => { this.generateRamdomGame('easy'); this.startTimer() }}>New Game</button>
+                            <button id='btn-newgame' onClick={() => { this.newgame('easy') }}>New Game</button>
                         </div>
                     </div>
                     <div id='game-display'>
