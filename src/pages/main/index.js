@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
-import { Timer } from "easytimer.js";
-import { ms } from "pretty-ms"
 //import { Timers } from "./service/Timer"
 
 export default class Main extends Component {
@@ -72,6 +70,7 @@ export default class Main extends Component {
     generateRamdomGame = async (difficulty) => {
         this.startTimer();
 
+        var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
         var puzzle = '';
         var tinit = '';
         var solution = '';
@@ -132,6 +131,8 @@ export default class Main extends Component {
 
         await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
 
+        selecNewgameDropdown.style.display = 'none';
+
     };
 
     newgame = async (difficulty) => {
@@ -146,6 +147,8 @@ export default class Main extends Component {
             case 'stop': this.stopTimer();
                 break;
             case 'start': this.startTimer();
+                break;
+            default:
                 break;
         }
     };
@@ -166,8 +169,19 @@ export default class Main extends Component {
         );
     };
 
+    renderDifficulties = () => {
+        var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
+
+        if (selecNewgameDropdown.style.display === 'none') {
+            selecNewgameDropdown.style.display = 'block';
+        }
+        else if (selecNewgameDropdown.style.display === 'block') {
+            selecNewgameDropdown.style.display = 'none';
+        }
+    }
+
+
     render() {
-        var t = this.state.timeData.time;
         return (
             <div className='game'>
                 <div id='game-page'>
@@ -175,13 +189,19 @@ export default class Main extends Component {
                         <div id='game-info'>
                             <p id='difficulty'>{this.state.currentDifficulty}</p>
                             <div id='timer'>
-                                <p>{this.msTime(t)}</p>
+                                <p>{this.msTime(this.state.timeData.time)}</p>
                                 <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
-                                <button id="play-pause-btn" onClick={() => this.resetTimer()}>reset</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={() => { this.newgame('easy') }}>New Game</button>
+                            <button id='btn-newgame' onClick={() => { this.renderDifficulties() }}>New Game x</button>
+                            <div id='selec-newgame-dropdown' style={{ display: 'none' }}>
+                                <ul>
+                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('easy') }}>Easy</button></li>
+                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('medium') }}>Medium</button></li>
+                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('hard') }}>Hard</button></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div id='game-display'>
