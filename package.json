@@ -9,7 +9,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "sudoku": "0.0.3"
+    "sudoku": "0.0.3",
+    "sudoku-solver-js": "^0.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

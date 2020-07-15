@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
+import { SudokuSolver } from 'sudoku-solver-js';
 //import { Timers } from "./service/Timer"
 
 export default class Main extends Component {
@@ -12,7 +13,7 @@ export default class Main extends Component {
     };
 
     componentDidMount() {
-        this.generateRamdomGame('hard');
+        this.generateRamdomGame('easy');
         this.startTimer = this.startTimer.bind(this)
 
     }
@@ -70,10 +71,11 @@ export default class Main extends Component {
     generateRamdomGame = async (difficulty) => {
         this.startTimer();
 
+        //var solver = new SudokuSolver; >> solver.solve(string 00250..)
         var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
-        var puzzle = '';
-        var tinit = '';
-        var solution = '';
+        var puzzle = [];
+        var tinit = [];
+        var solution = [];
         var tend = '';
         var tdiff = 100;
 
@@ -118,11 +120,22 @@ export default class Main extends Component {
                 break;
         }
 
-        console.log(solution);
-        console.log(solvepuzzle(puzzle));
-        console.log(solvepuzzle(puzzle));
+        /*puzzle = puzzle.map(cell => {
+            if (cell !== null) {
+                return cell + 1;
+            }
+            else { return 0 }
+        })
 
-        puzzle = puzzle.map(cell => ({ value: cell, id: puzzle.indexOf(cell) }));
+        var game = '';
+        for (var element of puzzle) {
+            game = game.concat('' + element)
+        }
+
+        solution = solver.solve(game, { result: 'array' })*/
+
+
+        puzzle = puzzle.map((cell, index) => ({ value: cell, id: index }));
 
         var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
         var n = 9;
@@ -134,6 +147,28 @@ export default class Main extends Component {
         selecNewgameDropdown.style.display = 'none';
 
     };
+
+    /*checkEntries = (entry, matrix) => {
+
+        return null
+    }
+
+    fillElements = (entry, pos) => {
+        const { gameTable } = this.state;
+
+        for(var element of gameTable){
+            if(gameTable.indexOf(element)<8){
+                element = element.concat(gameTable[gameTable.indexOf(element+1)])
+            }
+            else{
+                gameTable = gameTable[gameTable.indexOf(element-1)]
+            }
+        }
+
+        //await this.setState({gameTable:[])
+
+        return null
+    }*/
 
     newgame = async (difficulty) => {
         this.stopTimer();
@@ -161,13 +196,24 @@ export default class Main extends Component {
                 {gameTable.map(row => (
                     <tr className="game-row" key={gameTable.indexOf(row)}>
                         {row.map(cell => (
-                            <td className="game-cell" id={"" + gameTable.indexOf(row) + row.indexOf(cell)} key={"" + gameTable.indexOf(row) + row.indexOf(cell)}>{cell.value}</td>
+                            <td className="game-cell" id={"" + gameTable.indexOf(row) + row.indexOf(cell)} key={cell.id}>{cell.value}</td>
                         ))}
                     </tr>
                 ))}
             </tbody>
         );
     };
+
+    renderController = () => {
+        var number = [...Array(9).keys()];
+        number = number.map(num => ({ value: num + 1, id: number.indexOf(num) }));
+
+        return (<tbody>
+            <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' key={"" + btnNum.id}>{btnNum.value}</td>))}
+            </tr>
+        </tbody>
+        )
+    }
 
     renderDifficulties = () => {
         var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
@@ -213,22 +259,7 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <div id='game-controller'>
-                            <table id='controller-table'>
-                                <tbody>
-                                    <tr id="controller-row">
-                                        <td className="controller-cell">0</td>
-                                        <td className="controller-cell">1</td>
-                                        <td className="controller-cell">2</td>
-                                        <td className="controller-cell">3</td>
-                                        <td className="controller-cell">4</td>
-                                        <td className="controller-cell">5</td>
-                                        <td className="controller-cell">6</td>
-                                        <td className="controller-cell">7</td>
-                                        <td className="controller-cell">8</td>
-                                        <td className="controller-cell">9</td>
-                                        <td className="controller-cell">1</td>
-                                    </tr>
-                                </tbody>
+                            <table id='controller-table'>{this.renderController()}
                             </table>
                         </div>
                     </div>
