@@ -120,6 +120,8 @@ export default class Main extends Component {
                 break;
         }
 
+        console.log(puzzle);
+
         /*puzzle = puzzle.map(cell => {
             if (cell !== null) {
                 return cell + 1;
@@ -148,27 +150,63 @@ export default class Main extends Component {
 
     };
 
-    /*checkEntries = (entry, matrix) => {
+    checkEntries = (entry, matrix) => {
 
         return null
     }
 
-    fillElements = (entry, pos) => {
-        const { gameTable } = this.state;
+    fillElements = () => {
 
-        for(var element of gameTable){
-            if(gameTable.indexOf(element)<8){
-                element = element.concat(gameTable[gameTable.indexOf(element+1)])
+        var entry = 2;
+        var pos = 10;
+
+        var solver = new SudokuSolver;
+        var game = '';
+        var solution = [];
+        var n = 9;
+        var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
+        const { gameTable } = this.state;
+        var newgameTable = [];
+
+        for (var element of gameTable) {
+            if (gameTable.indexOf(element) > 0) {
+                newgameTable[gameTable.indexOf(element)] = newgameTable[gameTable.indexOf(element) - 1].concat(element);
             }
-            else{
-                gameTable = gameTable[gameTable.indexOf(element-1)]
+            else {
+                newgameTable[gameTable.indexOf(element)] = element;
             }
         }
 
+        newgameTable = newgameTable[8];
+        console.log(newgameTable);
+        newgameTable[pos].value = entry;
+
+        /*newgameTable = newgameTable.map((cell, index) => {
+            if (cell.value !== null) {
+                return { value: cell.value + 1, id: index };
+            }
+            else { return { value: 0, id: index } }
+        })
+
+        for (var element of newgameTable) {
+            game = game.concat('' + element.value)
+        }
+
+        solution = solver.solve(game, { result: 'array' })
+
+        console.log(solution);*/
+
+
+        /*
+                newgameTable = newgameTable[8]
+        
+                console.log(newgameTable);
+        
+                matrix = new Array(Math.ceil(newgameTable.length / n)).fill().map(_ => newgameTable.splice(0, n));*/
+
         //await this.setState({gameTable:[])
 
-        return null
-    }*/
+    }
 
     newgame = async (difficulty) => {
         this.stopTimer();
@@ -237,6 +275,7 @@ export default class Main extends Component {
                             <div id='timer'>
                                 <p>{this.msTime(this.state.timeData.time)}</p>
                                 <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
+                                <button onClick={() => this.fillElements()}>fill/check</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
