@@ -12,6 +12,9 @@ export default class Main extends Component {
         counter: 0,
     };
 
+    puzzle = [];
+
+
     componentDidMount() {
         this.generateRamdomGame('easy');
         this.startTimer = this.startTimer.bind(this)
@@ -136,8 +139,19 @@ export default class Main extends Component {
 
         solution = solver.solve(game, { result: 'array' })*/
 
+        this.puzzle = puzzle.map((cell, index) => {
+            if (cell !== null) {
+                return ({ value: cell + 1, id: index })
+            }
+            return { value: cell, id: index }
+        });
 
-        puzzle = puzzle.map((cell, index) => ({ value: cell, id: index }));
+        puzzle = puzzle.map((cell, index) => {
+            if (cell !== null) {
+                return ({ value: cell + 1, id: index })
+            }
+            return { value: cell, id: index }
+        });
 
         var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
         var n = 9;
@@ -147,6 +161,7 @@ export default class Main extends Component {
         await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
 
         selecNewgameDropdown.style.display = 'none';
+
 
     };
 
@@ -159,52 +174,46 @@ export default class Main extends Component {
 
         var entry = 2;
         var pos = 10;
+        var puzzle = this.puzzle;
 
-        var solver = new SudokuSolver;
+        var solver = new SudokuSolver();
         var game = '';
         var solution = [];
         var n = 9;
-        var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
-        const { gameTable } = this.state;
-        var newgameTable = [];
 
-        for (var element of gameTable) {
-            if (gameTable.indexOf(element) > 0) {
-                newgameTable[gameTable.indexOf(element)] = newgameTable[gameTable.indexOf(element) - 1].concat(element);
-            }
-            else {
-                newgameTable[gameTable.indexOf(element)] = element;
-            }
-        }
+        puzzle[pos].value = entry;
+        console.log(puzzle);
 
-        newgameTable = newgameTable[8];
-        console.log(newgameTable);
-        newgameTable[pos].value = entry;
-
-        /*newgameTable = newgameTable.map((cell, index) => {
+        puzzle = puzzle.map(cell => {
             if (cell.value !== null) {
-                return { value: cell.value + 1, id: index };
+                return cell.value;
             }
-            else { return { value: 0, id: index } }
+            else { return 0 }
         })
 
-        for (var element of newgameTable) {
-            game = game.concat('' + element.value)
+        var game = '';
+        for (var element of puzzle) {
+            game = game.concat('' + element)
         }
 
-        solution = solver.solve(game, { result: 'array' })
+        solution = solver.solve(game, { result: 'array' });
 
-        console.log(solution);*/
+        console.log(solution);
 
+        if (solution === 'No solution found.') {
+            var elementHint = document.getElementById('80');
 
-        /*
-                newgameTable = newgameTable[8]
-        
-                console.log(newgameTable);
-        
-                matrix = new Array(Math.ceil(newgameTable.length / n)).fill().map(_ => newgameTable.splice(0, n));*/
+            elementHint.style.backgroundColor = "ff0"
 
-        //await this.setState({gameTable:[])
+        }
+
+        /*newgameTable = newgameTable[8]
+
+        console.log(newgameTable);
+
+        matrix = new Array(Math.ceil(newgameTable.length / n)).fill().map(_ => newgameTable.splice(0, n));* /
+
+        await this.setState({ gameTable: []);*/
 
     }
 
@@ -216,6 +225,7 @@ export default class Main extends Component {
 
     startStopTimer = () => {
         var btnIcon = document.getElementById('start-stop-btn');
+
         switch (btnIcon.innerText) {
             case 'stop': this.stopTimer();
                 break;
@@ -234,7 +244,7 @@ export default class Main extends Component {
                 {gameTable.map(row => (
                     <tr className="game-row" key={gameTable.indexOf(row)}>
                         {row.map(cell => (
-                            <td className="game-cell" id={"" + gameTable.indexOf(row) + row.indexOf(cell)} key={cell.id}>{cell.value}</td>
+                            <td className="game-cell" id={cell.id} key={cell.id} style={{ backgroundColor: "#fff" }}>{cell.value}</td>
                         ))}
                     </tr>
                 ))}
