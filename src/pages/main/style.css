@@ -79,6 +79,7 @@ button.selec-difficulty-btn{
 
 button.selec-difficulty-btn:hover{
     background-color: rgba(110,110,110,0.5);
+    cursor: pointer;
     border-radius: 5px;
 }
 
@@ -143,6 +144,11 @@ td.game-cell{
     justify-content: center;
 }
 
+td.game-cell:hover{
+    background-color: rgba(110,110,110,0.5);
+    cursor: pointer;
+}
+
 div#game-controller{
     /*border: 1px solid red;*/
     width: 100%;
@@ -186,4 +192,9 @@ td.controller-cell{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+td.controller-cell:hover{
+    background-color: rgba(110,110,110,0.5);
+    cursor: pointer;
 }

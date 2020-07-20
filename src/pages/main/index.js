@@ -10,10 +10,8 @@ export default class Main extends Component {
         currentDifficulty: '',
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
+        selectedCell: null,
     };
-
-    puzzle = [];
-
 
     componentDidMount() {
         this.generateRamdomGame('easy');
@@ -74,7 +72,6 @@ export default class Main extends Component {
     generateRamdomGame = async (difficulty) => {
         this.startTimer();
 
-        //var solver = new SudokuSolver; >> solver.solve(string 00250..)
         var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
         var puzzle = [];
         var tinit = [];
@@ -125,20 +122,6 @@ export default class Main extends Component {
 
         console.log(puzzle);
 
-        /*puzzle = puzzle.map(cell => {
-            if (cell !== null) {
-                return cell + 1;
-            }
-            else { return 0 }
-        })
-
-        var game = '';
-        for (var element of puzzle) {
-            game = game.concat('' + element)
-        }
-
-        solution = solver.solve(game, { result: 'array' })*/
-
         this.puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
                 return ({ value: cell + 1, id: index })
@@ -161,37 +144,90 @@ export default class Main extends Component {
         await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
 
         selecNewgameDropdown.style.display = 'none';
-
-
     };
 
-    checkEntries = (entry, matrix) => {
+    listenPlayTurn = async (pos) => {
+
+        var puzzle = [...this.puzzle];
+        var renderedCells = [];
+        var selectedCell = document.getElementById("" + pos);
+
+        for (var element of puzzle) {
+            renderedCells.push(document.getElementById('' + element.id));
+            renderedCells[element.id].style.backgroundColor = '#fff';
+            renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+        }
+
+        selectedCell.style.backgroundColor = 'red';
+        await this.setState({ selectedCell: pos })
 
         return null
     }
 
-    fillElements = () => {
+    fillElements = async (entry, pos) => {
 
-        var entry = 2;
+        if (pos == null) {
+            return;
+        }
+        else {
+            var renderedCells = [];
+            var solver = new SudokuSolver();
+            var game = '';
+            var puzzle = [...this.puzzle];
+            var trySolve = '';
+            var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
+            var n = 9;
+
+            trySolve = this.puzzle.map(cell => {
+                if (cell.value !== null) {
+                    return cell.value;
+                }
+                else { return 0 }
+            });
+
+            for (var element of trySolve) {
+                game = game.concat('' + element);
+            }
+
+            trySolve = solver.solve(game, { result: 'array' });
+
+            if (trySolve !== 'No solution found.') {
+                this.solution = solver.solve(game, { result: 'array' });
+                console.log(this.solution);
+            }
+
+            this.puzzle[pos].value = entry;
+            puzzle[pos].value = entry;
+
+            matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
+
+            for (var element of this.puzzle) {
+                renderedCells.push(document.getElementById('' + element.id));
+                renderedCells[element.id].style.backgroundColor = '#fff';
+                renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+            }
+
+            await this.setState({ gameTable: matrix, selectedCell: null });
+
+        }
+    };
+
+    checkEntries = () => {
+
+        //var entry = 2;
         var pos = 10;
-        var puzzle = this.puzzle;
-
         var solver = new SudokuSolver();
+        var puzzle = []
         var game = '';
         var solution = [];
-        var n = 9;
 
-        puzzle[pos].value = entry;
-        console.log(puzzle);
-
-        puzzle = puzzle.map(cell => {
+        puzzle = this.puzzle.map(cell => {
             if (cell.value !== null) {
                 return cell.value;
             }
             else { return 0 }
-        })
+        });
 
-        var game = '';
         for (var element of puzzle) {
             game = game.concat('' + element)
         }
@@ -201,21 +237,42 @@ export default class Main extends Component {
         console.log(solution);
 
         if (solution === 'No solution found.') {
-            var elementHint = document.getElementById('80');
 
-            elementHint.style.backgroundColor = "ff0"
+            for (element of this.puzzle) {
+                if (element.value == null) {
+                    continue
+                }
+                else if (element.value !== this.solution[element.id]) {
 
+                    console.log(element.value);
+                    console.log(this.solution[element.id]);
+
+                    var wrongElements = document.getElementById('' + element.id);
+                    var checkUncheckBtn = document.getElementById('check-btn');
+
+                    switch (checkUncheckBtn.innerText) {
+                        case 'check':
+                            wrongElements.style.backgroundColor = 'red';
+                            checkUncheckBtn.innerText = 'uncheck';
+                            break;
+                        case 'uncheck':
+                            wrongElements.style.backgroundColor = '#fff';
+                            checkUncheckBtn.innerText = 'check';
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    continue
+                }
+            }
+
+            /*var elementHint = document.getElementById('' + pos);
+    
+            elementHint.style.backgroundColor = "#ffcccb";*/
         }
-
-        /*newgameTable = newgameTable[8]
-
-        console.log(newgameTable);
-
-        matrix = new Array(Math.ceil(newgameTable.length / n)).fill().map(_ => newgameTable.splice(0, n));* /
-
-        await this.setState({ gameTable: []);*/
-
-    }
+    };
 
     newgame = async (difficulty) => {
         this.stopTimer();
@@ -244,7 +301,7 @@ export default class Main extends Component {
                 {gameTable.map(row => (
                     <tr className="game-row" key={gameTable.indexOf(row)}>
                         {row.map(cell => (
-                            <td className="game-cell" id={cell.id} key={cell.id} style={{ backgroundColor: "#fff" }}>{cell.value}</td>
+                            <td className="game-cell" id={cell.id} onClick={() => this.listenPlayTurn(cell.id)} key={cell.id}>{cell.value}</td>
                         ))}
                     </tr>
                 ))}
@@ -253,15 +310,17 @@ export default class Main extends Component {
     };
 
     renderController = () => {
+        const { selectedCell } = this.state;
+
         var number = [...Array(9).keys()];
         number = number.map(num => ({ value: num + 1, id: number.indexOf(num) }));
 
         return (<tbody>
-            <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' key={"" + btnNum.id}>{btnNum.value}</td>))}
+            <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
             </tr>
         </tbody>
         )
-    }
+    };
 
     renderDifficulties = () => {
         var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
@@ -272,7 +331,7 @@ export default class Main extends Component {
         else if (selecNewgameDropdown.style.display === 'block') {
             selecNewgameDropdown.style.display = 'none';
         }
-    }
+    };
 
 
     render() {
@@ -285,7 +344,7 @@ export default class Main extends Component {
                             <div id='timer'>
                                 <p>{this.msTime(this.state.timeData.time)}</p>
                                 <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
-                                <button onClick={() => this.fillElements()}>fill/check</button>
+                                <button id='check-btn' onClick={() => this.checkEntries()}>check</button>
                             </div>
                         </div>
                         <div id='selec-newgame'>
