@@ -78,6 +78,8 @@ export default class Main extends Component {
         var solution = [];
         var tend = '';
         var tdiff = 100;
+        var solver = new SudokuSolver();
+        var game = '';
 
         switch (difficulty) {
             case 'easy':
@@ -120,14 +122,30 @@ export default class Main extends Component {
                 break;
         }
 
-        console.log(puzzle);
-
         this.puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
                 return ({ value: cell + 1, id: index })
             }
             return { value: cell, id: index }
         });
+
+        console.log(this.puzzle);
+
+        this.solution = this.puzzle.map(cell => {
+            if (cell.value !== null) {
+                return cell.value;
+            }
+            else { return 0 }
+        });
+
+
+        for (var element of this.solution) {
+            game = game.concat('' + element);
+        }
+
+        this.solution = solver.solve(game, { result: 'array' });
+
+        console.log(this.solution);
 
         puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
@@ -152,16 +170,20 @@ export default class Main extends Component {
         var renderedCells = [];
         var selectedCell = document.getElementById("" + pos);
 
-        for (var element of puzzle) {
-            renderedCells.push(document.getElementById('' + element.id));
-            renderedCells[element.id].style.backgroundColor = '#fff';
-            renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+        if (selectedCell.style.backgroundColor === 'red') {
+            selectedCell.style.backgroundColor = '#fff';
+            selectedCell.style = ':hover{ background-color: #00ff00 }';
         }
+        else {
+            for (var element of puzzle) {
+                renderedCells.push(document.getElementById('' + element.id));
+                renderedCells[element.id].style.backgroundColor = '#fff';
+                renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+            }
 
-        selectedCell.style.backgroundColor = 'red';
-        await this.setState({ selectedCell: pos })
-
-        return null
+            selectedCell.style.backgroundColor = 'red';
+            await this.setState({ selectedCell: pos })
+        }
     }
 
     fillElements = async (entry, pos) => {
@@ -171,30 +193,9 @@ export default class Main extends Component {
         }
         else {
             var renderedCells = [];
-            var solver = new SudokuSolver();
-            var game = '';
             var puzzle = [...this.puzzle];
-            var trySolve = '';
             var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
             var n = 9;
-
-            trySolve = this.puzzle.map(cell => {
-                if (cell.value !== null) {
-                    return cell.value;
-                }
-                else { return 0 }
-            });
-
-            for (var element of trySolve) {
-                game = game.concat('' + element);
-            }
-
-            trySolve = solver.solve(game, { result: 'array' });
-
-            if (trySolve !== 'No solution found.') {
-                this.solution = solver.solve(game, { result: 'array' });
-                console.log(this.solution);
-            }
 
             this.puzzle[pos].value = entry;
             puzzle[pos].value = entry;
@@ -208,69 +209,36 @@ export default class Main extends Component {
             }
 
             await this.setState({ gameTable: matrix, selectedCell: null });
-
         }
     };
 
     checkEntries = () => {
 
-        //var entry = 2;
-        var pos = 10;
-        var solver = new SudokuSolver();
-        var puzzle = []
-        var game = '';
-        var solution = [];
+        var checkUncheckBtn = document.getElementById('check-btn');
 
-        puzzle = this.puzzle.map(cell => {
-            if (cell.value !== null) {
-                return cell.value;
+        if (checkUncheckBtn.innerText === 'uncheck') {
+            checkUncheckBtn.innerText = 'check';
+            for (var element of this.puzzle) {
+                var tableElements = document.getElementById('' + element.id);
+                tableElements.style.backgroundColor = '#fff';
+                tableElements.style = ':hover{ background-color: #00ff00 }';
             }
-            else { return 0 }
-        });
-
-        for (var element of puzzle) {
-            game = game.concat('' + element)
         }
-
-        solution = solver.solve(game, { result: 'array' });
-
-        console.log(solution);
-
-        if (solution === 'No solution found.') {
-
+        else {
             for (element of this.puzzle) {
                 if (element.value == null) {
                     continue
                 }
                 else if (element.value !== this.solution[element.id]) {
-
-                    console.log(element.value);
-                    console.log(this.solution[element.id]);
-
                     var wrongElements = document.getElementById('' + element.id);
-                    var checkUncheckBtn = document.getElementById('check-btn');
 
-                    switch (checkUncheckBtn.innerText) {
-                        case 'check':
-                            wrongElements.style.backgroundColor = 'red';
-                            checkUncheckBtn.innerText = 'uncheck';
-                            break;
-                        case 'uncheck':
-                            wrongElements.style.backgroundColor = '#fff';
-                            checkUncheckBtn.innerText = 'check';
-                            break;
-                        default:
-                            break;
-                    }
+                    wrongElements.style.backgroundColor = 'red';
+                    checkUncheckBtn.innerText = 'uncheck';
                 }
                 else {
                     continue
                 }
             }
-
-            /*var elementHint = document.getElementById('' + pos);
-    
-            elementHint.style.backgroundColor = "#ffcccb";*/
         }
     };
 
