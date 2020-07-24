@@ -11,7 +11,10 @@ export default class Main extends Component {
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
         selectedCell: null,
+        entries: [],
     };
+
+    entries = [];
 
     componentDidMount() {
         this.generateRamdomGame('easy');
@@ -129,8 +132,6 @@ export default class Main extends Component {
             return { value: cell, id: index }
         });
 
-        console.log(this.puzzle);
-
         this.solution = this.puzzle.map(cell => {
             if (cell.value !== null) {
                 return cell.value;
@@ -138,14 +139,11 @@ export default class Main extends Component {
             else { return 0 }
         });
 
-
         for (var element of this.solution) {
             game = game.concat('' + element);
         }
 
         this.solution = solver.solve(game, { result: 'array' });
-
-        console.log(this.solution);
 
         puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
@@ -173,6 +171,7 @@ export default class Main extends Component {
         if (selectedCell.style.backgroundColor === 'red') {
             selectedCell.style.backgroundColor = '#fff';
             selectedCell.style = ':hover{ background-color: #00ff00 }';
+            await this.setState({ selectedCell: null })
         }
         else {
             for (var element of puzzle) {
@@ -186,7 +185,28 @@ export default class Main extends Component {
         }
     }
 
+    undoEntries = async () => {
+        if (this.entries.length === 0) {
+            return
+        }
+        else {
+            var posDelete = this.entries[this.entries.length - 1].pos;
+            var puzzle = [...this.puzzle];
+            var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
+            var n = 9;
+
+            this.entries.pop();
+            this.puzzle[posDelete].value = null;
+
+            matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
+
+            await this.setState({ gameTable: matrix });
+        }
+    };
+
     fillElements = async (entry, pos) => {
+
+        this.entries.push({ value: entry, pos: pos });
 
         if (pos == null) {
             return;
@@ -212,34 +232,41 @@ export default class Main extends Component {
         }
     };
 
+
     checkEntries = () => {
 
-        var checkUncheckBtn = document.getElementById('check-btn');
+        for (var element of this.puzzle) {
+            if (element.value == null) {
+                continue
+            }
+            else if (element.value !== this.solution[element.id]) {
+                var wrongElements = document.getElementById('' + element.id);
 
-        if (checkUncheckBtn.innerText === 'uncheck') {
-            checkUncheckBtn.innerText = 'check';
-            for (var element of this.puzzle) {
-                var tableElements = document.getElementById('' + element.id);
-                tableElements.style.backgroundColor = '#fff';
-                tableElements.style = ':hover{ background-color: #00ff00 }';
+                wrongElements.style.animation = 'check 1s';
+
+            }
+            else {
+                continue
             }
         }
-        else {
-            for (element of this.puzzle) {
+
+        setTimeout(() => {
+            for (var element of this.puzzle) {
                 if (element.value == null) {
                     continue
                 }
                 else if (element.value !== this.solution[element.id]) {
                     var wrongElements = document.getElementById('' + element.id);
 
-                    wrongElements.style.backgroundColor = 'red';
-                    checkUncheckBtn.innerText = 'uncheck';
+                    wrongElements.style.removeProperty('animation');
+
                 }
                 else {
                     continue
                 }
             }
-        }
+
+        }, 1000);
     };
 
     newgame = async (difficulty) => {
@@ -285,6 +312,7 @@ export default class Main extends Component {
 
         return (<tbody>
             <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
+                <td className='controller-cell' onClick={() => this.undoEntries()} id='delete-btn'>Undo</td>
             </tr>
         </tbody>
         )

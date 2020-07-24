@@ -144,6 +144,11 @@ td.game-cell{
     justify-content: center;
 }
 
+@keyframes check {
+    from {background-color: red;}
+    to {background-color: #fff;}
+}
+
 td.game-cell:hover{
     background-color: rgba(110,110,110,0.5);
     cursor: pointer;
