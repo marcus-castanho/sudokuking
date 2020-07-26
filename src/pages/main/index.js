@@ -145,6 +145,8 @@ export default class Main extends Component {
 
         this.solution = solver.solve(game, { result: 'array' });
 
+        console.log(this.solution);
+
         puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
                 return ({ value: cell + 1, id: index })
@@ -168,7 +170,11 @@ export default class Main extends Component {
         var renderedCells = [];
         var selectedCell = document.getElementById("" + pos);
 
-        if (selectedCell.style.backgroundColor === 'red') {
+        if (pos === null) {//DESABILITAR REATRIBUIÇÃO DE  DADO A ELEMENTO OK
+            await this.setState({ selectedCell: null })
+            return
+        }
+        else if (selectedCell.style.backgroundColor === 'red') {
             selectedCell.style.backgroundColor = '#fff';
             selectedCell.style = ':hover{ background-color: #00ff00 }';
             await this.setState({ selectedCell: null })
@@ -206,18 +212,23 @@ export default class Main extends Component {
 
     fillElements = async (entry, pos) => {
 
-        this.entries.push({ value: entry, pos: pos });
-
-        if (pos == null) {
+        if (pos === null) {
             return;
         }
         else {
+            this.entries.push({ value: entry, pos: pos });
             var renderedCells = [];
             var puzzle = [...this.puzzle];
             var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
             var n = 9;
 
             this.puzzle[pos].value = entry;
+
+            if (this.puzzle[pos].value === this.solution[pos]) {
+                var filledElement = document.getElementById('' + this.puzzle[pos].id);
+                filledElement.onclick = this.listenPlayTurn(null);
+            }
+
             puzzle[pos].value = entry;
 
             matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
@@ -229,6 +240,8 @@ export default class Main extends Component {
             }
 
             await this.setState({ gameTable: matrix, selectedCell: null });
+
+            this.listenGameEnd();
         }
     };
 
@@ -270,6 +283,12 @@ export default class Main extends Component {
     };
 
     newgame = async (difficulty) => {
+        var gameTableRendered = document.getElementById('game-table');
+        var gameTableHidden = document.getElementById('game-table-hidden');
+
+        gameTableRendered.style.filter = 'none';
+        gameTableHidden.style.display = 'none'
+
         this.stopTimer();
         await setTimeout(this.resetTimer(), 1000);
         this.generateRamdomGame(difficulty);
@@ -277,16 +296,42 @@ export default class Main extends Component {
 
     startStopTimer = () => {
         var btnIcon = document.getElementById('start-stop-btn');
+        var gameTableRendered = document.getElementById('game-table');
+        var gameTableHidden = document.getElementById('game-table-hidden');
+        var playBtn = document.getElementById('play-btn');
+        var checkBtn = document.getElementById('check-btn');
+
 
         switch (btnIcon.innerText) {
             case 'stop': this.stopTimer();
+                gameTableRendered.style.filter = 'blur(0.2rem)';
+                gameTableHidden.style.display = 'block';
+                playBtn.style.display = 'block';
+                checkBtn.disabled = true;
                 break;
             case 'start': this.startTimer();
+                gameTableRendered.style.filter = 'none';
+                gameTableHidden.style.display = 'none'
+                playBtn.style.display = 'none';
+                checkBtn.disabled = false;
                 break;
             default:
                 break;
         }
     };
+
+    listenGameEnd = () => {
+        var puzzle = [...this.puzzle];
+
+        for (var element of puzzle) {
+            puzzle[element.id] = element.value;
+        }
+        console.log(this.solution);
+
+        if (puzzle.toString() === this.solution.toString()) {
+            console.log('CONGRATS');
+        }
+    }
 
     renderTable = () => {
         const { gameTable } = this.state;
@@ -357,6 +402,14 @@ export default class Main extends Component {
                     <div id='game-display'>
                         <div id='game-board'>
                             <div id='game-table-container'>
+                                <div id='endgame'>
+                                    <div id='congrats-newgame' style={{ display: 'none' }}>
+                                        <p>Congratulations!</p>
+                                    </div>
+                                </div>
+                                <div id='game-table-hidden'>
+                                </div>
+                                <div id='play-btn' onClick={() => this.startStopTimer()}>play</div>
                                 <table id='game-table'>
                                     {this.renderTable()}
                                 </table>

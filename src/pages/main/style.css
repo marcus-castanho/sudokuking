@@ -106,7 +106,9 @@ div#game-board{
 }
 
 div#game-table-container{
+    /*border: 1px solid black;*/
     height: 100%;
+    position: relative;
 }
 
 table#game-table {
@@ -122,11 +124,52 @@ table#game-table {
 
 table#game-table tbody{
     /*border: 1px solid blue;*/
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 0;
 } 
 
+div#game-table-hidden{
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+
+div#endgame{
+    background-color: #fff;
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+
+div#play-btn{
+    z-index: 3;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+div#play-btn:hover{
+    cursor: pointer;
+}
+
+div#congrats-newgame{
+    border: 1px solid blue;
+    z-index: 2;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
 tr.game-row {
     /*border: 1px solid red;*/
