@@ -145,8 +145,6 @@ export default class Main extends Component {
 
         this.solution = solver.solve(game, { result: 'array' });
 
-        console.log(this.solution);
-
         puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
                 return ({ value: cell + 1, id: index })
@@ -170,11 +168,7 @@ export default class Main extends Component {
         var renderedCells = [];
         var selectedCell = document.getElementById("" + pos);
 
-        if (pos === null) {//DESABILITAR REATRIBUIÇÃO DE  DADO A ELEMENTO OK
-            await this.setState({ selectedCell: null })
-            return
-        }
-        else if (selectedCell.style.backgroundColor === 'red') {
+        if (selectedCell.style.backgroundColor === 'red') {
             selectedCell.style.backgroundColor = '#fff';
             selectedCell.style = ':hover{ background-color: #00ff00 }';
             await this.setState({ selectedCell: null })
@@ -222,12 +216,11 @@ export default class Main extends Component {
             var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
             var n = 9;
 
-            this.puzzle[pos].value = entry;
-
             if (this.puzzle[pos].value === this.solution[pos]) {
-                var filledElement = document.getElementById('' + this.puzzle[pos].id);
-                filledElement.onclick = this.listenPlayTurn(null);
+                return;
             }
+
+            this.puzzle[pos].value = entry;
 
             puzzle[pos].value = entry;
 
@@ -320,15 +313,16 @@ export default class Main extends Component {
         }
     };
 
-    listenGameEnd = () => {
+    listenGameEnd = () => {//IMPLEMENTAR PÁGINA DE FINAL DE JOGO
         var puzzle = [...this.puzzle];
 
         for (var element of puzzle) {
             puzzle[element.id] = element.value;
         }
-        console.log(this.solution);
 
         if (puzzle.toString() === this.solution.toString()) {
+            var btnIcon = document.getElementById("start-stop-btn");
+            btnIcon.disabled = 'true';
             console.log('CONGRATS');
         }
     }
@@ -402,8 +396,8 @@ export default class Main extends Component {
                     <div id='game-display'>
                         <div id='game-board'>
                             <div id='game-table-container'>
-                                <div id='endgame'>
-                                    <div id='congrats-newgame' style={{ display: 'none' }}>
+                                <div id='endgame' style={{ display: 'none' }}>
+                                    <div id='congrats-newgame'>
                                         <p>Congratulations!</p>
                                     </div>
                                 </div>
