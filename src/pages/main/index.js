@@ -11,7 +11,6 @@ export default class Main extends Component {
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
         selectedCell: null,
-        entries: [],
     };
 
     entries = [];
@@ -21,6 +20,68 @@ export default class Main extends Component {
         this.startTimer = this.startTimer.bind(this)
 
     }
+
+    initialConfig = async () => {
+        var btnIcon = document.getElementById('start-stop-btn');
+        var gameTableRendered = document.getElementById('game-table');
+        var gameTableHidden = document.getElementById('game-table-hidden');
+        var playBtn = document.getElementById('play-btn');
+        var checkBtn = document.getElementById('check-btn');
+
+        await this.setState({
+            gameTable: [],
+            currentDifficulty: '',
+            timeData: { time: 0, isOn: false, start: 0 },
+            counter: 0,
+            selectedCell: null,
+            entries: [],
+        })
+        this.entries = [];
+        this.puzzle = [];
+        this.solution = [];
+
+        gameTableRendered.style.filter = 'none';
+        gameTableHidden.style.display = 'none'
+        playBtn.style.display = 'none';
+        checkBtn.disabled = false;
+
+        var pos = '';
+        switch (pos) {
+            case "x":
+                return
+                break;
+            default:
+                break;
+        }
+
+        return
+    }
+
+    startStopTimer = () => {
+        var btnIcon = document.getElementById('start-stop-btn');
+        var gameTableRendered = document.getElementById('game-table');
+        var gameTableHidden = document.getElementById('game-table-hidden');
+        var playBtn = document.getElementById('play-btn');
+        var checkBtn = document.getElementById('check-btn');
+
+
+        switch (btnIcon.innerText) {
+            case 'stop': this.stopTimer();
+                gameTableRendered.style.filter = 'blur(0.2rem)';
+                gameTableHidden.style.display = 'block';
+                playBtn.style.display = 'block';
+                checkBtn.disabled = true;
+                break;
+            case 'start': this.startTimer();
+                gameTableRendered.style.filter = 'none';
+                gameTableHidden.style.display = 'none'
+                playBtn.style.display = 'none';
+                checkBtn.disabled = false;
+                break;
+            default:
+                break;
+        }
+    };
 
     startTimer = async () => {
         var startInstant = Date.now() - this.state.timeData.time;
@@ -145,6 +206,8 @@ export default class Main extends Component {
 
         this.solution = solver.solve(game, { result: 'array' });
 
+        console.log(this.solution);
+
         puzzle = puzzle.map((cell, index) => {
             if (cell !== null) {
                 return ({ value: cell + 1, id: index })
@@ -210,7 +273,6 @@ export default class Main extends Component {
             return;
         }
         else {
-            this.entries.push({ value: entry, pos: pos });
             var renderedCells = [];
             var puzzle = [...this.puzzle];
             var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
@@ -219,6 +281,8 @@ export default class Main extends Component {
             if (this.puzzle[pos].value === this.solution[pos]) {
                 return;
             }
+
+            this.entries.push({ value: entry, pos: pos });
 
             this.puzzle[pos].value = entry;
 
@@ -276,41 +340,10 @@ export default class Main extends Component {
     };
 
     newgame = async (difficulty) => {
-        var gameTableRendered = document.getElementById('game-table');
-        var gameTableHidden = document.getElementById('game-table-hidden');
-
-        gameTableRendered.style.filter = 'none';
-        gameTableHidden.style.display = 'none'
-
         this.stopTimer();
         await setTimeout(this.resetTimer(), 1000);
+        await this.initialConfig();
         this.generateRamdomGame(difficulty);
-    };
-
-    startStopTimer = () => {
-        var btnIcon = document.getElementById('start-stop-btn');
-        var gameTableRendered = document.getElementById('game-table');
-        var gameTableHidden = document.getElementById('game-table-hidden');
-        var playBtn = document.getElementById('play-btn');
-        var checkBtn = document.getElementById('check-btn');
-
-
-        switch (btnIcon.innerText) {
-            case 'stop': this.stopTimer();
-                gameTableRendered.style.filter = 'blur(0.2rem)';
-                gameTableHidden.style.display = 'block';
-                playBtn.style.display = 'block';
-                checkBtn.disabled = true;
-                break;
-            case 'start': this.startTimer();
-                gameTableRendered.style.filter = 'none';
-                gameTableHidden.style.display = 'none'
-                playBtn.style.display = 'none';
-                checkBtn.disabled = false;
-                break;
-            default:
-                break;
-        }
     };
 
     listenGameEnd = () => {//IMPLEMENTAR PÁGINA DE FINAL DE JOGO
@@ -323,6 +356,7 @@ export default class Main extends Component {
         if (puzzle.toString() === this.solution.toString()) {
             var btnIcon = document.getElementById("start-stop-btn");
             btnIcon.disabled = 'true';
+            this.stopTimer();
             console.log('CONGRATS');
         }
     }
