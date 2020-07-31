@@ -62,6 +62,7 @@ div#selec-newgame-dropdown{
     border-radius: 5px;
     font-size: 16px;
     margin-top: 2px;
+    z-index: 2;
 }
 
 div#selec-newgame-dropdown li.selec-newgame-item{
@@ -141,12 +142,13 @@ div#game-table-hidden{
 }
 
 div#endgame{
+    border: 1px solid red;
     background-color: #fff;
     z-index: 1;
     position: absolute;
     height: 100%;
     width: 100%;
-    display: none;
+    display: block;
 }
 
 div#play-btn{
@@ -156,6 +158,11 @@ div#play-btn{
     top: 50%;
     transform: translate(-50%, -50%);
     display: none;
+    height: 10%;
+}
+
+div#play-btn img{
+    height: 100%;
 }
 
 div#play-btn:hover{
@@ -164,11 +171,27 @@ div#play-btn:hover{
 
 div#congrats-newgame{
     border: 1px solid blue;
+    background-color: aquamarine;
     z-index: 2;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+div#congrats-newgame button{
+    background-color: white;
+    margin: 1rem;
+    border: 1px solid rgba(110,110,110,0.5);
+    padding: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+div#congrats-newgame button:hover{
+    cursor: pointer;
 }
 
 tr.game-row {

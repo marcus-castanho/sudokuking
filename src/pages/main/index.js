@@ -2,23 +2,30 @@ import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { SudokuSolver } from 'sudoku-solver-js';
+import playBtn from '../../images/playBtn.svg'
 //import { Timers } from "./service/Timer"
 
 export default class Main extends Component {
+    container = React.createRef();
     state = {
         gameTable: [],
         currentDifficulty: '',
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
         selectedCell: null,
+        difficultiesOpen: false,
     };
 
     entries = [];
 
     componentDidMount() {
         this.generateRamdomGame('easy');
-        this.startTimer = this.startTimer.bind(this)
+        this.startTimer = this.startTimer.bind(this);
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
 
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
     initialConfig = async () => {
@@ -27,6 +34,7 @@ export default class Main extends Component {
         var gameTableHidden = document.getElementById('game-table-hidden');
         var playBtn = document.getElementById('play-btn');
         var checkBtn = document.getElementById('check-btn');
+        var endgame = document.getElementById('endgame');
 
         await this.setState({
             gameTable: [],
@@ -44,15 +52,8 @@ export default class Main extends Component {
         gameTableHidden.style.display = 'none'
         playBtn.style.display = 'none';
         checkBtn.disabled = false;
-
-        var pos = '';
-        switch (pos) {
-            case "x":
-                return
-                break;
-            default:
-                break;
-        }
+        endgame.style.display = 'none';
+        btnIcon.disabled = false;
 
         return
     }
@@ -104,15 +105,25 @@ export default class Main extends Component {
     };
 
     stopTimer = async () => {
+        var puzzle = [...this.puzzle];
+        var renderedCells = [];
+
         await this.setState({
             timeData: {
                 time: this.state.timeData.time,
                 isOn: false
-            }
+            },
+            selectedCell: null
         });
         clearInterval(this.timer);
         var btnIcon = document.getElementById("start-stop-btn");
         btnIcon.innerText = 'start'
+
+        for (var element of puzzle) {
+            renderedCells.push(document.getElementById('' + element.id));
+            renderedCells[element.id].style.backgroundColor = '#fff';
+            renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+        }
     };
 
     resetTimer = async () => {
@@ -136,7 +147,6 @@ export default class Main extends Component {
     generateRamdomGame = async (difficulty) => {
         this.startTimer();
 
-        var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
         var puzzle = [];
         var tinit = [];
         var solution = [];
@@ -220,9 +230,7 @@ export default class Main extends Component {
 
         matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
 
-        await this.setState({ gameTable: matrix, currentDifficulty: difficulty });
-
-        selecNewgameDropdown.style.display = 'none';
+        await this.setState({ gameTable: matrix, currentDifficulty: difficulty, difficultiesOpen: false });
     };
 
     listenPlayTurn = async (pos) => {
@@ -346,6 +354,22 @@ export default class Main extends Component {
         this.generateRamdomGame(difficulty);
     };
 
+    handleClickOutside = event => {
+        if (this.container.current && !this.container.current.contains(event.target)) {
+            this.setState({
+                difficultiesOpen: false,
+            });
+        }
+    };
+
+    handleButtonClick = () => {
+        this.setState(state => {
+            return {
+                difficultiesOpen: !state.difficultiesOpen,
+            };
+        });
+    };
+
     listenGameEnd = () => {//IMPLEMENTAR PÁGINA DE FINAL DE JOGO
         var puzzle = [...this.puzzle];
 
@@ -355,7 +379,11 @@ export default class Main extends Component {
 
         if (puzzle.toString() === this.solution.toString()) {
             var btnIcon = document.getElementById("start-stop-btn");
+            var endgame = document.getElementById("endgame");
+
             btnIcon.disabled = 'true';
+            endgame.style.display = "block";
+
             this.stopTimer();
             console.log('CONGRATS');
         }
@@ -391,17 +419,6 @@ export default class Main extends Component {
         )
     };
 
-    renderDifficulties = () => {
-        var selecNewgameDropdown = document.getElementById('selec-newgame-dropdown');
-
-        if (selecNewgameDropdown.style.display === 'none') {
-            selecNewgameDropdown.style.display = 'block';
-        }
-        else if (selecNewgameDropdown.style.display === 'block') {
-            selecNewgameDropdown.style.display = 'none';
-        }
-    };
-
 
     render() {
         return (
@@ -417,27 +434,28 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={() => { this.renderDifficulties() }}>New Game x</button>
-                            <div id='selec-newgame-dropdown' style={{ display: 'none' }}>
+                            <button id='btn-newgame' onClick={() => this.handleButtonClick()}>New Game x</button>{this.state.difficultiesOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
                                 <ul>
                                     <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('easy') }}>Easy</button></li>
                                     <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('medium') }}>Medium</button></li>
                                     <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('hard') }}>Hard</button></li>
                                 </ul>
-                            </div>
+                            </div>)}
                         </div>
                     </div>
                     <div id='game-display'>
                         <div id='game-board'>
                             <div id='game-table-container'>
-                                <div id='endgame' style={{ display: 'none' }}>
+                                <div id='endgame'>
                                     <div id='congrats-newgame'>
                                         <p>Congratulations!</p>
+                                        <p>{this.msTime(this.state.timeData.time)}</p>
+                                        <button onClick={() => { this.newgame('easy') }}>START NEW GAME</button>
                                     </div>
                                 </div>
                                 <div id='game-table-hidden'>
                                 </div>
-                                <div id='play-btn' onClick={() => this.startStopTimer()}>play</div>
+                                <div id='play-btn' onClick={() => this.startStopTimer()}><img src={playBtn} alt='playBtn' /></div>
                                 <table id='game-table'>
                                     {this.renderTable()}
                                 </table>
