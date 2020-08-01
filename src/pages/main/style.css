@@ -3,6 +3,7 @@ div.game{
     display: flex;
     flex-direction: column;
     height: 612px;
+    height: 100vh;
     margin: 0 0 60px 0;
 }
 
@@ -10,13 +11,25 @@ div#game-page{
     /*border: 1px solid red;*/
     flex: 1;
     width: 100%;
-    max-height: 610px;
-    padding: 0 15%;
+    height: 610px;
     display: flex;
     flex-direction: column;
 }
+
+@media screen and (min-width: 500px){
+    #game-page{
+        padding: 0 15%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    #game-page{
+        padding: 0 1rem;
+    }
+}
+
 div#game-header{
-    border:1px solid black;
+    border-bottom:1px solid  rgba(110,110,110,0.5);
     margin: 10px 0 10px;
     display: flex;
     justify-content: space-between;
@@ -85,14 +98,21 @@ button.selec-difficulty-btn:hover{
 }
 
 div#game-display{
-    /*border: 1px solid black;*/
+    /*border: 2px solid black;
     /*background-color: grey;*/
     flex: 1;
     margin: 5px 0 10px;
-    padding: 20px 20%;
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+@media screen and (max-width: 200px){
+    #game-display{
+        padding: 0 30%;
+    }
 }
 
 div#game-board{
@@ -101,9 +121,10 @@ div#game-board{
     flex: 1;
     width: 100%;
     max-width: 500px;
-    max-height: 500px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    padding-top: 0;
 }
 
 div#game-table-container{
@@ -113,14 +134,13 @@ div#game-table-container{
 }
 
 table#game-table {
-    /*border: 1px solid black;*/
+    border: 2px solid black;
     width:100%;
     flex: 1;
     height: 100%;
     max-height: 500px;
     display: flex;
     flex-direction: column;
- 
 }
 
 table#game-table tbody{
@@ -142,13 +162,13 @@ div#game-table-hidden{
 }
 
 div#endgame{
-    border: 1px solid red;
+    border: 2px solid #000;
     background-color: #fff;
     z-index: 1;
     position: absolute;
     height: 100%;
     width: 100%;
-    display: block;
+    display: none;
 }
 
 div#play-btn{
@@ -169,25 +189,40 @@ div#play-btn:hover{
     cursor: pointer;
 }
 
-div#congrats-newgame{
-    border: 1px solid blue;
-    background-color: aquamarine;
-    z-index: 2;
+div#container-congrats-newgame{
+    /*border: 1px solid #000;*/
+    border-radius: 5px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
+    z-index: 2;
 }
+
+div#congrats-newgame{
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #000;
+    text-align: center;
+    color: white;
+}
+
+p#solve-time{
+    font-weight: bold;
+    margin :0.5rem 0 0 0;
+}
+
 
 div#congrats-newgame button{
     background-color: white;
-    margin: 1rem;
-    border: 1px solid rgba(110,110,110,0.5);
-    padding: 5px;
+    border: 1px solid #000;
+    margin: 0.5rem 1rem;
+    padding: 5px 8px;
     text-decoration: none;
     border-radius: 5px;
     font-size: 16px;
+    font-weight: 500;
 }
 
 div#congrats-newgame button:hover{
@@ -221,7 +256,7 @@ td.game-cell:hover{
 }
 
 div#game-controller{
-    /*border: 1px solid red;*/
+    border: 2px solid #000;
     width: 100%;
     height: 45px;
     max-width: 500px;
@@ -241,12 +276,12 @@ table#controller-table {
 }
 
 table#controller-table tbody{
-        /*border: 1px solid blue;*/
-        flex: 1;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
+    /*border: 1px solid blue;*/
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 tr#controller-row {
@@ -269,3 +304,4 @@ td.controller-cell:hover{
     background-color: rgba(110,110,110,0.5);
     cursor: pointer;
 }
+

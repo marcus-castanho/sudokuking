@@ -426,12 +426,12 @@ export default class Main extends Component {
                 <div id='game-page'>
                     <div id='game-header'>
                         <div id='game-info'>
-                            <p id='difficulty'>{this.state.currentDifficulty}</p>
                             <div id='timer'>
                                 <p>{this.msTime(this.state.timeData.time)}</p>
                                 <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
-                                <button id='check-btn' onClick={() => this.checkEntries()}>check</button>
                             </div>
+                            <p id='difficulty'>{this.state.currentDifficulty}</p>
+                            <button id='check-btn' onClick={() => this.checkEntries()}>CHECK GAME</button>
                         </div>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick()}>New Game x</button>{this.state.difficultiesOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
@@ -447,10 +447,12 @@ export default class Main extends Component {
                         <div id='game-board'>
                             <div id='game-table-container'>
                                 <div id='endgame'>
-                                    <div id='congrats-newgame'>
-                                        <p>Congratulations!</p>
-                                        <p>{this.msTime(this.state.timeData.time)}</p>
-                                        <button onClick={() => { this.newgame('easy') }}>START NEW GAME</button>
+                                    <div id='container-congrats-newgame'>
+                                        <div id='congrats-newgame'>
+                                            <p>Congratulations!</p>
+                                            <p id='solve-time'>{this.msTime(this.state.timeData.time)}</p>
+                                            <div id='start-newgame-btn'><button onClick={() => { this.newgame('easy') }}>START NEW GAME</button></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id='game-table-hidden'>
