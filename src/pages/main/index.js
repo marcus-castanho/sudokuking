@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { SudokuSolver } from 'sudoku-solver-js';
-import playBtn from '../../images/playBtn.svg'
+import playBtn from '../../images/playBtn.png'
+import playBtnTimer from '../../images/playBtnTimer.png'
+import pauseBtnTimer from '../../images/pauseBtnTimer.png'
 //import { Timers } from "./service/Timer"
 
 export default class Main extends Component {
     container = React.createRef();
     state = {
         gameTable: [],
-        currentDifficulty: '',
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
         selectedCell: null,
@@ -21,11 +22,6 @@ export default class Main extends Component {
     componentDidMount() {
         this.generateRamdomGame('easy');
         this.startTimer = this.startTimer.bind(this);
-        document.addEventListener("mousedown", this.handleClickOutside);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
     initialConfig = async () => {
@@ -38,7 +34,6 @@ export default class Main extends Component {
 
         await this.setState({
             gameTable: [],
-            currentDifficulty: '',
             timeData: { time: 0, isOn: false, start: 0 },
             counter: 0,
             selectedCell: null,
@@ -65,8 +60,7 @@ export default class Main extends Component {
         var playBtn = document.getElementById('play-btn');
         var checkBtn = document.getElementById('check-btn');
 
-
-        switch (btnIcon.innerText) {
+        switch (btnIcon.className) {
             case 'stop': this.stopTimer();
                 gameTableRendered.style.filter = 'blur(0.2rem)';
                 gameTableHidden.style.display = 'block';
@@ -86,6 +80,9 @@ export default class Main extends Component {
 
     startTimer = async () => {
         var startInstant = Date.now() - this.state.timeData.time;
+        var pausetImg = document.createElement('img');
+        pausetImg.setAttribute("src", pauseBtnTimer);
+        pausetImg.setAttribute("id", "pauseBtnTimer");
 
         await this.setState({
             timeData: {
@@ -101,10 +98,16 @@ export default class Main extends Component {
             }
         }), 1);
         var btnIcon = document.getElementById("start-stop-btn");
-        btnIcon.innerText = 'stop'
+        btnIcon.className = 'stop';
+        btnIcon.innerHTML = '';
+        btnIcon.appendChild(pausetImg);
     };
 
     stopTimer = async () => {
+        var startImg = document.createElement('img');
+        startImg.setAttribute("src", playBtnTimer);
+        startImg.setAttribute("id", "playBtnTimer");
+
         var puzzle = [...this.puzzle];
         var renderedCells = [];
 
@@ -117,7 +120,9 @@ export default class Main extends Component {
         });
         clearInterval(this.timer);
         var btnIcon = document.getElementById("start-stop-btn");
-        btnIcon.innerText = 'start'
+        btnIcon.className = 'start';
+        btnIcon.innerHTML = '';
+        btnIcon.appendChild(startImg);
 
         for (var element of puzzle) {
             renderedCells.push(document.getElementById('' + element.id));
@@ -144,7 +149,7 @@ export default class Main extends Component {
         return hrs + ':' + mins + ':' + secs;
     };
 
-    generateRamdomGame = async (difficulty) => {
+    generateRamdomGame = async () => {
         this.startTimer();
 
         var puzzle = [];
@@ -155,45 +160,15 @@ export default class Main extends Component {
         var solver = new SudokuSolver();
         var game = '';
 
-        switch (difficulty) {
-            case 'easy':
-                while (tdiff >= 0.25) {
-                    puzzle = new makepuzzle();
+        while (tdiff < 0.25 || tdiff >= 0.4) {
+            puzzle = new makepuzzle();
 
-                    tinit = performance.now();
+            tinit = performance.now();
 
-                    solution = new solvepuzzle(puzzle);
+            solution = new solvepuzzle(puzzle);
 
-                    tend = performance.now();
-                    tdiff = tend - tinit;
-                }
-                break;
-            case 'medium':
-                while (tdiff < 0.25 || tdiff >= 0.4) {
-                    puzzle = new makepuzzle();
-
-                    tinit = performance.now();
-
-                    solution = new solvepuzzle(puzzle);
-
-                    tend = performance.now();
-                    tdiff = tend - tinit;
-                }
-                break;
-            case 'hard':
-                while (tdiff < 0.4 || tdiff >= 0.5) {
-                    puzzle = new makepuzzle();
-
-                    tinit = performance.now();
-
-                    solution = new solvepuzzle(puzzle);
-
-                    tend = performance.now();
-                    tdiff = tend - tinit;
-                }
-                break;
-            default:
-                break;
+            tend = performance.now();
+            tdiff = tend - tinit;
         }
 
         this.puzzle = puzzle.map((cell, index) => {
@@ -230,7 +205,7 @@ export default class Main extends Component {
 
         matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
 
-        await this.setState({ gameTable: matrix, currentDifficulty: difficulty, difficultiesOpen: false });
+        await this.setState({ gameTable: matrix, difficultiesOpen: false });
     };
 
     listenPlayTurn = async (pos) => {
@@ -239,7 +214,7 @@ export default class Main extends Component {
         var renderedCells = [];
         var selectedCell = document.getElementById("" + pos);
 
-        if (selectedCell.style.backgroundColor === 'red') {
+        if (selectedCell.style.backgroundColor === 'rgba(110,110,110,1)') {
             selectedCell.style.backgroundColor = '#fff';
             selectedCell.style = ':hover{ background-color: #00ff00 }';
             await this.setState({ selectedCell: null })
@@ -251,7 +226,7 @@ export default class Main extends Component {
                 renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
             }
 
-            selectedCell.style.backgroundColor = 'red';
+            selectedCell.style.backgroundColor = 'rgba(110,110,110,1)';
             await this.setState({ selectedCell: pos })
         }
     }
@@ -310,7 +285,6 @@ export default class Main extends Component {
         }
     };
 
-
     checkEntries = () => {
 
         for (var element of this.puzzle) {
@@ -347,30 +321,57 @@ export default class Main extends Component {
         }, 1000);
     };
 
-    newgame = async (difficulty) => {
+    newgame = async () => {
         this.stopTimer();
         await setTimeout(this.resetTimer(), 1000);
         await this.initialConfig();
-        this.generateRamdomGame(difficulty);
+        this.generateRamdomGame();
     };
 
-    handleClickOutside = event => {
-        if (this.container.current && !this.container.current.contains(event.target)) {
-            this.setState({
-                difficultiesOpen: false,
+    handleButtonClick = (newGameResumeGame) => {
+        var btnIcon = document.getElementById('start-stop-btn');
+        var gameTableRendered = document.getElementById('game-table');
+        var gameTableHidden = document.getElementById('game-table-hidden');
+        var playBtn = document.getElementById('play-btn');
+        var checkBtn = document.getElementById('check-btn');
+
+        if (newGameResumeGame == 'newgameOpt') {
+            if (this.state.difficultiesOpen == false) {
+                gameTableRendered.style.filter = 'blur(0.2rem)';
+                gameTableHidden.style.display = 'block';
+                playBtn.style.display = 'block';
+                checkBtn.disabled = true;
+                btnIcon.onclick = null;
+
+                this.startStopTimer();
+
+                this.setState(state => {
+                    return {
+                        difficultiesOpen: true,
+                    };
+                });
+            }
+            else {
+                return
+            }
+        }
+        if (newGameResumeGame == 'resumegameOpt') {
+            gameTableRendered.style.filter = 'none';
+            gameTableHidden.style.display = 'none'
+            playBtn.style.display = 'none';
+            checkBtn.disabled = false;
+
+            this.startStopTimer();
+
+            this.setState(state => {
+                return {
+                    difficultiesOpen: false,
+                };
             });
         }
     };
 
-    handleButtonClick = () => {
-        this.setState(state => {
-            return {
-                difficultiesOpen: !state.difficultiesOpen,
-            };
-        });
-    };
-
-    listenGameEnd = () => {//IMPLEMENTAR PÁGINA DE FINAL DE JOGO
+    listenGameEnd = () => {
         var puzzle = [...this.puzzle];
 
         for (var element of puzzle) {
@@ -385,7 +386,6 @@ export default class Main extends Component {
             endgame.style.display = "block";
 
             this.stopTimer();
-            console.log('CONGRATS');
         }
     }
 
@@ -413,7 +413,7 @@ export default class Main extends Component {
 
         return (<tbody>
             <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
-                <td className='controller-cell' onClick={() => this.undoEntries()} id='delete-btn'>Undo</td>
+                <td className='controller-cell' onClick={() => this.undoEntries()} id='delete-btn'><svg className='arrow-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27"><path d="M13.021 0C9.207 0 5.589 1.715 3.125 4.609V.521a.521.521 0 0 0-1.042 0v5.208c0 .288.234.521.521.521h5.208a.522.522 0 1 0 0-1.042H3.977c2.267-2.619 5.566-4.166 9.044-4.166C19.625 1.042 25 6.416 25 13.021 25 19.626 19.625 25 13.021 25 6.416 25 1.042 19.626 1.042 13.021a.521.521 0 0 0-1.042 0c0 7.18 5.84 13.021 13.021 13.021 7.18 0 13.021-5.841 13.021-13.021C26.042 5.841 20.201 0 13.021 0"></path></svg></td>
             </tr>
         </tbody>
         )
@@ -428,19 +428,12 @@ export default class Main extends Component {
                         <div id='game-info'>
                             <div id='timer'>
                                 <p>{this.msTime(this.state.timeData.time)}</p>
-                                <button id='start-stop-btn' onClick={() => this.startStopTimer()}></button>
+                                <button id='start-stop-btn' className='stop' onClick={() => this.startStopTimer()}></button>
                             </div>
-                            <p id='difficulty'>{this.state.currentDifficulty}</p>
-                            <button id='check-btn' onClick={() => this.checkEntries()}>CHECK GAME</button>
                         </div>
+                        <button id='check-btn' onClick={() => this.checkEntries()}>CHECK GAME</button>
                         <div id='selec-newgame'>
-                            <button id='btn-newgame' onClick={() => this.handleButtonClick()}>New Game x</button>{this.state.difficultiesOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
-                                <ul>
-                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('easy') }}>Easy</button></li>
-                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('medium') }}>Medium</button></li>
-                                    <li className='selec-newgame-item'><button className='selec-difficulty-btn' onClick={() => { this.newgame('hard') }}>Hard</button></li>
-                                </ul>
-                            </div>)}
+                            <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
                     </div>
                     <div id='game-display'>
@@ -458,6 +451,11 @@ export default class Main extends Component {
                                 <div id='game-table-hidden'>
                                 </div>
                                 <div id='play-btn' onClick={() => this.startStopTimer()}><img src={playBtn} alt='playBtn' /></div>
+                                {this.state.difficultiesOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
+                                    <div className='selec-newgame-item'><div className='selec-difficulty'>Are you sure you want to start a new game?</div>
+                                        <div id='restart-game-opt'><button onClick={() => { this.newgame() }}>Yes</button><button onClick={() => this.handleButtonClick('resumegameOpt')}>No</button></div>
+                                    </div>
+                                </div>)}
                                 <table id='game-table'>
                                     {this.renderTable()}
                                 </table>

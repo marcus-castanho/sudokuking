@@ -1,9 +1,13 @@
+html.dark-mode {
+    filter: invert(100%);
+}
+
 div.game{
     /*border: 1px solid blue;*/
     display: flex;
     flex-direction: column;
     height: 612px;
-    height: 100vh;
+    /*height: 100vh;*/
     margin: 0 0 60px 0;
 }
 
@@ -14,22 +18,23 @@ div#game-page{
     height: 610px;
     display: flex;
     flex-direction: column;
+    padding: 0 15%;
 }
 
-@media screen and (min-width: 500px){
+/*@media screen and (min-width: 500px){
     #game-page{
         padding: 0 15%;
     }
-}
+}*/
 
-@media screen and (max-width: 500px){
+/*@media screen and (max-width: 500px){
     #game-page{
         padding: 0 1rem;
     }
-}
+}*/
 
 div#game-header{
-    border-bottom:1px solid  rgba(110,110,110,0.5);
+    /*border-bottom:1px solid  rgba(110,110,110,0.5);*/
     margin: 10px 0 10px;
     display: flex;
     justify-content: space-between;
@@ -37,20 +42,56 @@ div#game-header{
 }
 
 div#game-info{
-    border: 1px solid black;
+    border:1px solid black;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
+    padding:0.2rem;
+    margin-bottom: 1px;
 }
 
 div#timer{
-    border: 1px solid black;
+    /*border: 1px solid black;*/
     display: flex;
     flex-direction: row;
+    padding-top: 3px;
+}
+
+div#timer p{
+    font-weight: bolder;
+}
+
+button#start-stop-btn {
+    border: none;
+    background-color: #fff;
+    margin-left: 5px;
+}
+
+button#start-stop-btn:hover {
+    cursor: pointer;
+}
+
+button#start-stop-btn img{
+    height: 1rem;
+}
+
+#check-btn{
+    background-color: white;
+    border: 1px solid rgba(110,110,110,0.5);
+    padding: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#check-btn:hover{
+    cursor: pointer;
 }
 
 div#selec-newgame{
     /*border: 1px solid black;*/
-    position: relative;
+    /*position: relative;*/
+    color: #000;
 }
 
 div#selec-newgame button#btn-newgame{
@@ -70,31 +111,45 @@ div#selec-newgame-dropdown{
     display: block;
     border: 1px solid rgba(110,110,110,0.5);
     position: absolute;
-    width: 100%;
+    /*width: 100%*;*/
     background-color:#fff;
     border-radius: 5px;
     font-size: 16px;
     margin-top: 2px;
-    z-index: 2;
+    z-index: 3;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
-div#selec-newgame-dropdown li.selec-newgame-item{
+div.selec-newgame-item{
     list-style-type: none;
     text-align: center;
-    padding: 2px;
+    padding: 5px;
 }
 
-button.selec-difficulty-btn{
+div.selec-difficulty{
     /*border: 1px solid black;*/
     border: none;
     width: 100%;
+    padding-bottom: 5px;
     background-color: #fff;
 }
 
-button.selec-difficulty-btn:hover{
-    background-color: rgba(110,110,110,0.5);
-    cursor: pointer;
+#restart-game-opt button{
+    background-color: white;
+    border: 1px solid rgba(110,110,110,0.5);
+    padding: 5px;
+    width: 35%;
+    text-decoration: none;
     border-radius: 5px;
+    font-size: 16px;
+}
+
+#restart-game-opt button:hover{
+    cursor: pointer;
+    background-color: rgba(110,110,110,1);
+    color: #fff;
 }
 
 div#game-display{
@@ -154,6 +209,7 @@ table#game-table tbody{
 } 
 
 div#game-table-hidden{
+    border: 2px solid #000;
     z-index: 1;
     position: absolute;
     height: 100%;
@@ -246,8 +302,8 @@ td.game-cell{
 }
 
 @keyframes check {
-    from {background-color: red;}
-    to {background-color: #fff;}
+    from {background-color: rgba(255,0,0,0.5);color: rgba(255,0,0,1);}
+    to {background-color: #fff; color:#000}
 }
 
 td.game-cell:hover{
@@ -303,5 +359,9 @@ td.controller-cell{
 td.controller-cell:hover{
     background-color: rgba(110,110,110,0.5);
     cursor: pointer;
+}
+
+.arrow-icon{
+    width: 30px;
 }
 
