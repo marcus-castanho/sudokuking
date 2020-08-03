@@ -1,7 +1,3 @@
-html.dark-mode {
-    filter: invert(100%);
-}
-
 div.game{
     /*border: 1px solid blue;*/
     display: flex;
@@ -18,20 +14,19 @@ div#game-page{
     height: 610px;
     display: flex;
     flex-direction: column;
-    padding: 0 15%;
 }
 
-/*@media screen and (min-width: 500px){
+@media screen and (min-width: 750px){
     #game-page{
         padding: 0 15%;
     }
-}*/
+}
 
-/*@media screen and (max-width: 500px){
+@media screen and (max-width: 750px){
     #game-page{
-        padding: 0 1rem;
+        padding: 1rem;
     }
-}*/
+}
 
 div#game-header{
     /*border-bottom:1px solid  rgba(110,110,110,0.5);*/
@@ -128,7 +123,7 @@ div.selec-newgame-item{
     padding: 5px;
 }
 
-div.selec-difficulty{
+div.selec-newgame{
     /*border: 1px solid black;*/
     border: none;
     width: 100%;
@@ -153,7 +148,7 @@ div.selec-difficulty{
 }
 
 div#game-display{
-    /*border: 2px solid black;
+    /*border: 2px solid black;*/
     /*background-color: grey;*/
     flex: 1;
     margin: 5px 0 10px;
@@ -164,11 +159,11 @@ div#game-display{
     position: relative;
 }
 
-@media screen and (max-width: 200px){
+/*@media screen and (max-width: 200px){
     #game-display{
         padding: 0 30%;
     }
-}
+}*/
 
 div#game-board{
     /*border: 1px solid red;*/
@@ -196,6 +191,20 @@ table#game-table {
     max-height: 500px;
     display: flex;
     flex-direction: column;
+}
+
+@media screen and (min-width: 750px){
+    #game-table{
+        min-height: 500px;
+        min-width: 500px;
+    }
+}
+
+@media screen and (max-width: 750px){
+    #game-table{
+        min-height: 450px;
+        min-width: 450px;
+    }
 }
 
 table#game-table tbody{
@@ -301,6 +310,22 @@ td.game-cell{
     justify-content: center;
 }
 
+td.row2{
+    border-bottom: 2px solid #000;
+}
+
+td.row5{
+    border-bottom: 2px solid #000;
+}
+
+td.col2{
+    border-right: 2px solid #000;
+}
+
+td.col5{
+    border-right: 2px solid #000;
+}
+
 @keyframes check {
     from {background-color: rgba(255,0,0,0.5);color: rgba(255,0,0,1);}
     to {background-color: #fff; color:#000}
@@ -356,6 +381,10 @@ td.controller-cell{
     justify-content: center;
 }
 
+#erase-btn img{
+    width: 30px;
+}
+
 td.controller-cell:hover{
     background-color: rgba(110,110,110,0.5);
     cursor: pointer;
@@ -363,5 +392,21 @@ td.controller-cell:hover{
 
 .arrow-icon{
     width: 30px;
+}
+
+div.textContent{
+    color: #000;
+    padding-top: 5px;
+    text-align: center;
+}
+
+div.textContent h2{
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+div.textContent p{
+    text-align: justify;
+    text-indent: 40px
 }
 

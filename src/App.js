@@ -4,7 +4,6 @@ import Footer from './components/Footer';
 import Main from './pages/main';
 import "./style.css";
 
-
 const App = () => (
   <div className="App">
     <Header />
@@ -12,6 +11,5 @@ const App = () => (
     <Footer />
   </div>
 );
-
 
 export default App;

@@ -5,7 +5,7 @@ import { SudokuSolver } from 'sudoku-solver-js';
 import playBtn from '../../images/playBtn.png'
 import playBtnTimer from '../../images/playBtnTimer.png'
 import pauseBtnTimer from '../../images/pauseBtnTimer.png'
-//import { Timers } from "./service/Timer"
+import eraserIcon from '../../images/eraserIcon.png'
 
 export default class Main extends Component {
     container = React.createRef();
@@ -14,7 +14,7 @@ export default class Main extends Component {
         timeData: { time: 0, isOn: false, start: 0 },
         counter: 0,
         selectedCell: null,
-        difficultiesOpen: false,
+        newgameOpen: false,
     };
 
     entries = [];
@@ -31,6 +31,7 @@ export default class Main extends Component {
         var playBtn = document.getElementById('play-btn');
         var checkBtn = document.getElementById('check-btn');
         var endgame = document.getElementById('endgame');
+        var btnNewgame = document.getElementById('btn-newgame');
 
         await this.setState({
             gameTable: [],
@@ -48,7 +49,8 @@ export default class Main extends Component {
         playBtn.style.display = 'none';
         checkBtn.disabled = false;
         endgame.style.display = 'none';
-        btnIcon.disabled = false;
+        btnIcon.style = 'pointer-events:';
+        btnNewgame.disabled = false;
 
         return
     }
@@ -59,6 +61,7 @@ export default class Main extends Component {
         var gameTableHidden = document.getElementById('game-table-hidden');
         var playBtn = document.getElementById('play-btn');
         var checkBtn = document.getElementById('check-btn');
+        var btnNewgame = document.getElementById('btn-newgame');
 
         switch (btnIcon.className) {
             case 'stop': this.stopTimer();
@@ -66,12 +69,14 @@ export default class Main extends Component {
                 gameTableHidden.style.display = 'block';
                 playBtn.style.display = 'block';
                 checkBtn.disabled = true;
+                btnNewgame.disabled = true;
                 break;
             case 'start': this.startTimer();
                 gameTableRendered.style.filter = 'none';
                 gameTableHidden.style.display = 'none'
                 playBtn.style.display = 'none';
                 checkBtn.disabled = false;
+                btnNewgame.disabled = false;
                 break;
             default:
                 break;
@@ -154,7 +159,6 @@ export default class Main extends Component {
 
         var puzzle = [];
         var tinit = [];
-        var solution = [];
         var tend = '';
         var tdiff = 100;
         var solver = new SudokuSolver();
@@ -165,17 +169,43 @@ export default class Main extends Component {
 
             tinit = performance.now();
 
-            solution = new solvepuzzle(puzzle);
+            solvepuzzle(puzzle);
 
             tend = performance.now();
             tdiff = tend - tinit;
         }
 
         this.puzzle = puzzle.map((cell, index) => {
-            if (cell !== null) {
-                return ({ value: cell + 1, id: index })
+            var endRowElmt = 8;
+            var currRow = 0;
+            var currCol = index % 9;
+            var endSquareRowIndex = 2;
+            var endSquareColIndex = 2;
+            var squareRowIndex = 0;
+            var squareColIndex = 0;
+
+
+            while (index > endRowElmt) {
+                endRowElmt += 9;
+                currRow += 1;
             }
-            return { value: cell, id: index }
+
+            while (currCol > endSquareColIndex) {
+                endSquareColIndex += 3;
+                squareColIndex += 1;
+            }
+
+            while (currRow > endSquareRowIndex) {
+                endSquareRowIndex += 3;
+                squareRowIndex += 1;
+            }
+
+            var currSquare = (3 * squareRowIndex) + squareColIndex;
+
+            if (cell !== null) {
+                return ({ value: cell + 1, id: index, row: currRow, collum: currCol, square: currSquare })
+            }
+            return { value: cell, id: index, row: currRow, collum: currCol, square: currSquare }
         });
 
         this.solution = this.puzzle.map(cell => {
@@ -189,23 +219,17 @@ export default class Main extends Component {
             game = game.concat('' + element);
         }
 
+
         this.solution = solver.solve(game, { result: 'array' });
 
-        console.log(this.solution);
-
-        puzzle = puzzle.map((cell, index) => {
-            if (cell !== null) {
-                return ({ value: cell + 1, id: index })
-            }
-            return { value: cell, id: index }
-        });
+        puzzle = [...this.puzzle];
 
         var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
         var n = 9;
 
         matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
 
-        await this.setState({ gameTable: matrix, difficultiesOpen: false });
+        await this.setState({ gameTable: matrix, newgameOpen: false });
     };
 
     listenPlayTurn = async (pos) => {
@@ -214,24 +238,40 @@ export default class Main extends Component {
         var renderedCells = [];
         var selectedCell = document.getElementById("" + pos);
 
-        if (selectedCell.style.backgroundColor === 'rgba(110,110,110,1)') {
-            selectedCell.style.backgroundColor = '#fff';
-            selectedCell.style = ':hover{ background-color: #00ff00 }';
-            await this.setState({ selectedCell: null })
-        }
-        else {
+        if (this.state.selectedCell === pos) {
             for (var element of puzzle) {
                 renderedCells.push(document.getElementById('' + element.id));
                 renderedCells[element.id].style.backgroundColor = '#fff';
                 renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
             }
+            selectedCell.style.backgroundColor = '#fff';
+            selectedCell.style = ':hover{ background-color: #00ff00 }';
+            selectedCell.style.color = '#000'
+            await this.setState({ selectedCell: null })
+        }
+        else {
+            for (element of puzzle) {
+                renderedCells.push(document.getElementById('' + element.id));
+                renderedCells[element.id].style.backgroundColor = '#fff';
+                renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+                if (element.row === puzzle[pos].row || element.collum === puzzle[pos].collum || element.square === puzzle[pos].square) {
+                    renderedCells[element.id].style.backgroundColor = 'rgba(110,110,110,0.2)';
+                }
+            }
 
-            selectedCell.style.backgroundColor = 'rgba(110,110,110,1)';
+            selectedCell.style.color = '#fff'
+            selectedCell.style.backgroundColor = 'rgb(110,110,110)';
             await this.setState({ selectedCell: pos })
         }
     }
 
     undoEntries = async () => {
+        var btnIcon = document.getElementById('start-stop-btn');
+
+        if (btnIcon.className === 'start') {
+            return
+        }
+
         if (this.entries.length === 0) {
             return
         }
@@ -251,15 +291,49 @@ export default class Main extends Component {
     };
 
     fillElements = async (entry, pos) => {
+        var renderedCells = [];
+        var puzzle = [...this.puzzle];
+        var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
+        var n = 9;
+        var element = '';
+        var btnIcon = document.getElementById('start-stop-btn');
+
+        if (btnIcon.className === 'start') {
+            return
+        }
 
         if (pos === null) {
             return;
         }
+        else if (entry === 'erase') {
+            if (this.puzzle[pos] === null) {
+                return
+            }
+            else if (this.puzzle[pos].value === this.solution[pos]) {
+                return;
+            }
+
+            var cellErase = this.entries.find(element => element.pos === pos);
+            var cellEraseIndex = this.entries.indexOf(cellErase);
+
+            this.entries.splice(cellEraseIndex, 1);
+
+            this.puzzle[pos].value = null;
+            puzzle[pos].value = null;
+
+            matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
+
+            for (element of this.puzzle) {
+                renderedCells.push(document.getElementById('' + element.id));
+                renderedCells[element.id].style.backgroundColor = '#fff';
+                renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
+            }
+
+            await this.setState({ gameTable: matrix, selectedCell: null });
+
+
+        }
         else {
-            var renderedCells = [];
-            var puzzle = [...this.puzzle];
-            var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
-            var n = 9;
 
             if (this.puzzle[pos].value === this.solution[pos]) {
                 return;
@@ -273,7 +347,7 @@ export default class Main extends Component {
 
             matrix = new Array(Math.ceil(puzzle.length / n)).fill().map(_ => puzzle.splice(0, n));
 
-            for (var element of this.puzzle) {
+            for (element of this.puzzle) {
                 renderedCells.push(document.getElementById('' + element.id));
                 renderedCells[element.id].style.backgroundColor = '#fff';
                 renderedCells[element.id].style = ':hover{ background-color: #00ff00 }';
@@ -323,7 +397,7 @@ export default class Main extends Component {
 
     newgame = async () => {
         this.stopTimer();
-        await setTimeout(this.resetTimer(), 1000);
+        await this.resetTimer();
         await this.initialConfig();
         this.generateRamdomGame();
     };
@@ -335,19 +409,19 @@ export default class Main extends Component {
         var playBtn = document.getElementById('play-btn');
         var checkBtn = document.getElementById('check-btn');
 
-        if (newGameResumeGame == 'newgameOpt') {
-            if (this.state.difficultiesOpen == false) {
+        if (newGameResumeGame === 'newgameOpt') {
+            if (this.state.newgameOpen === false) {
                 gameTableRendered.style.filter = 'blur(0.2rem)';
                 gameTableHidden.style.display = 'block';
                 playBtn.style.display = 'block';
                 checkBtn.disabled = true;
-                btnIcon.onclick = null;
+                btnIcon.style = 'pointer-events: none'
 
                 this.startStopTimer();
 
                 this.setState(state => {
                     return {
-                        difficultiesOpen: true,
+                        newgameOpen: true,
                     };
                 });
             }
@@ -355,17 +429,18 @@ export default class Main extends Component {
                 return
             }
         }
-        if (newGameResumeGame == 'resumegameOpt') {
+        if (newGameResumeGame === 'resumegameOpt') {
             gameTableRendered.style.filter = 'none';
             gameTableHidden.style.display = 'none'
             playBtn.style.display = 'none';
             checkBtn.disabled = false;
+            btnIcon.style = 'pointer-events:';
 
             this.startStopTimer();
 
             this.setState(state => {
                 return {
-                    difficultiesOpen: false,
+                    newgameOpen: false,
                 };
             });
         }
@@ -381,13 +456,19 @@ export default class Main extends Component {
         if (puzzle.toString() === this.solution.toString()) {
             var btnIcon = document.getElementById("start-stop-btn");
             var endgame = document.getElementById("endgame");
+            var btnNewgame = document.getElementById('btn-newgame');
+            var checkBtn = document.getElementById('check-btn');
 
-            btnIcon.disabled = 'true';
+
+            btnIcon.style = 'pointer-events: none';
+            btnNewgame.disabled = true;
+            checkBtn.disabled = true;
             endgame.style.display = "block";
 
             this.stopTimer();
         }
     }
+
 
     renderTable = () => {
         const { gameTable } = this.state;
@@ -397,7 +478,7 @@ export default class Main extends Component {
                 {gameTable.map(row => (
                     <tr className="game-row" key={gameTable.indexOf(row)}>
                         {row.map(cell => (
-                            <td className="game-cell" id={cell.id} onClick={() => this.listenPlayTurn(cell.id)} key={cell.id}>{cell.value}</td>
+                            <td className={`game-cell ${'row' + cell.row} ${'col' + cell.collum}`} id={cell.id} onClick={() => this.listenPlayTurn(cell.id)} key={cell.id}>{cell.value}</td>
                         ))}
                     </tr>
                 ))}
@@ -413,7 +494,8 @@ export default class Main extends Component {
 
         return (<tbody>
             <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
-                <td className='controller-cell' onClick={() => this.undoEntries()} id='delete-btn'><svg className='arrow-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27"><path d="M13.021 0C9.207 0 5.589 1.715 3.125 4.609V.521a.521.521 0 0 0-1.042 0v5.208c0 .288.234.521.521.521h5.208a.522.522 0 1 0 0-1.042H3.977c2.267-2.619 5.566-4.166 9.044-4.166C19.625 1.042 25 6.416 25 13.021 25 19.626 19.625 25 13.021 25 6.416 25 1.042 19.626 1.042 13.021a.521.521 0 0 0-1.042 0c0 7.18 5.84 13.021 13.021 13.021 7.18 0 13.021-5.841 13.021-13.021C26.042 5.841 20.201 0 13.021 0"></path></svg></td>
+                <td className='controller-cell' onClick={() => this.fillElements('erase', selectedCell)} id='erase-btn'><img src={eraserIcon} alt='eraserIcon' /></td>
+                <td className='controller-cell' onClick={() => this.undoEntries()} id='undo-btn'><svg className='arrow-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27"><path d="M13.021 0C9.207 0 5.589 1.715 3.125 4.609V.521a.521.521 0 0 0-1.042 0v5.208c0 .288.234.521.521.521h5.208a.522.522 0 1 0 0-1.042H3.977c2.267-2.619 5.566-4.166 9.044-4.166C19.625 1.042 25 6.416 25 13.021 25 19.626 19.625 25 13.021 25 6.416 25 1.042 19.626 1.042 13.021a.521.521 0 0 0-1.042 0c0 7.18 5.84 13.021 13.021 13.021 7.18 0 13.021-5.841 13.021-13.021C26.042 5.841 20.201 0 13.021 0"></path></svg></td>
             </tr>
         </tbody>
         )
@@ -421,6 +503,7 @@ export default class Main extends Component {
 
 
     render() {
+
         return (
             <div className='game'>
                 <div id='game-page'>
@@ -431,7 +514,7 @@ export default class Main extends Component {
                                 <button id='start-stop-btn' className='stop' onClick={() => this.startStopTimer()}></button>
                             </div>
                         </div>
-                        <button id='check-btn' onClick={() => this.checkEntries()}>CHECK GAME</button>
+                        <button id='check-btn' onClick={() => this.checkEntries()}>Check game</button>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
@@ -451,8 +534,8 @@ export default class Main extends Component {
                                 <div id='game-table-hidden'>
                                 </div>
                                 <div id='play-btn' onClick={() => this.startStopTimer()}><img src={playBtn} alt='playBtn' /></div>
-                                {this.state.difficultiesOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
-                                    <div className='selec-newgame-item'><div className='selec-difficulty'>Are you sure you want to start a new game?</div>
+                                {this.state.newgameOpen && (<div id='selec-newgame-dropdown' ref={this.container}>
+                                    <div className='selec-newgame-item'><div className='selec-newgame'>Are you sure you want to start a new game?</div>
                                         <div id='restart-game-opt'><button onClick={() => { this.newgame() }}>Yes</button><button onClick={() => this.handleButtonClick('resumegameOpt')}>No</button></div>
                                     </div>
                                 </div>)}
@@ -467,6 +550,12 @@ export default class Main extends Component {
                         </div>
                     </div>
                     <div id='adsense'></div>
+                    <div className='textContent'>
+                        <h2>Game rules</h2>
+                        <p>The main target of a sudoku game is to fill all vacant cells with values acording to the rules applied to it. Those rules are: there must only be one number from 1 to 9 in each roll, collum and 3x3 square in witch the cell is contained. These requirements must be fulfilled simultaneously.</p>
+                        <p>
+                        </p>
+                    </div>
                 </div>
             </div>
         )
