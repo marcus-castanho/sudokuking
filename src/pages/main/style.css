@@ -181,6 +181,7 @@ div#game-table-container{
     /*border: 1px solid black;*/
     height: 100%;
     position: relative;
+    max-height: 500px;
 }
 
 table#game-table {
