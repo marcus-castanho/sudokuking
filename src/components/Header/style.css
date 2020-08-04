@@ -55,3 +55,7 @@ select#lang-select:hover{
     cursor: pointer;
 }
 
+#sudoku-king-logo-img{
+    width: 30%;
+}
+

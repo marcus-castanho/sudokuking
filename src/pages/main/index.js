@@ -6,6 +6,9 @@ import playBtn from '../../images/playBtn.png'
 import playBtnTimer from '../../images/playBtnTimer.png'
 import pauseBtnTimer from '../../images/pauseBtnTimer.png'
 import eraserIcon from '../../images/eraserIcon.png'
+import sudokuChecked from '../../images/sudokuChecked.PNG'
+import sudokuMagazineBw from '../../images/sudoku-magazine-bw.png'
+import sudokuPossibilities from '../../images/sudokuPossibilities.PNG'
 
 export default class Main extends Component {
     container = React.createRef();
@@ -550,11 +553,37 @@ export default class Main extends Component {
                         </div>
                     </div>
                     <div id='adsense'></div>
+                </div>
+                <div id='text-page'>
                     <div className='textContent'>
-                        <h2>Game rules</h2>
-                        <p>The main target of a sudoku game is to fill all vacant cells with values acording to the rules applied to it. Those rules are: there must only be one number from 1 to 9 in each roll, collum and 3x3 square in witch the cell is contained. These requirements must be fulfilled simultaneously.</p>
-                        <p>
-                        </p>
+                        <div className='text-info' id='text-info1'>
+                            <div className='paragraph'>
+                                <h2 id='game-rules'>Game rules</h2>
+                                <p>The main target of a sudoku game is to fill all vacant cells with values acording to the rules applied to it. Those rules are: there must only be one number from 1 to 9 in each roll, collum and 3x3 square in witch the cell is contained. These requirements must be fulfilled simultaneously.</p>
+                            </div>
+                            <div className='text-img-container'>
+                                <img className='text-img' src={sudokuChecked} alt='sudokuCheckedImg' />
+                            </div>
+                        </div>
+                        <div className='text-info' id='text-info2'>
+                            <div className='text-img-container'>
+                                <img className='text-img' src={sudokuMagazineBw} alt='sudoku-magazine-bw' />
+                            </div>
+                            <div className='paragraph'>
+                                <h2 id='game-history'>About the game - Sudoku history</h2>
+                                <p>Although the most popular version of the game, called <i>Sudoku</i>, the japanese version of the puzzle, the presumed origin of it is in the US in the 70's, more precisely in Indiana. At the time the puzzle did not find its popularity as in nowadays. </p><p>It was only after being introduced in Japan in the 80's that it became popular and also gained its name <i>Sūji wa dokushin ni kagiru</i> which can be translated as "the digits must be single" and was later commonly called by the first kanji of compound words to form and abbreviation, <i>Sudoku</i>. </p>
+                            </div>
+                        </div>
+                        <div className='text-info' id='text-info3'>
+                            <div className='paragraph'>
+                                <h2 id='game-tips'>Tips and strategies</h2>
+                                <p>It is a good practice when playing the puzzle to identify the board and get a sense of the distribution. Look for the squares, rows and columns that have more filled cells.</p><p>Scan rows from column to column and while marking down the missing numbers. Then scan over the current row in analysis and try to find the possible allocations to the missing numbers.
+                                </p>
+                            </div>
+                            <div className='text-img-container'>
+                                <img className='text-img' src={sudokuPossibilities} alt='sudokuPossibilities' />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -21,6 +21,6 @@ html > body{
 
 html{
     /*border: 5px solid blue;*/ 
-    min-height: 890px;
+    min-height: 385vh;
     display: flex;
 }
