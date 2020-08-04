@@ -166,6 +166,7 @@ export default class Main extends Component {
         var tdiff = 100;
         var solver = new SudokuSolver();
         var game = '';
+        this.givenNumsIndex = [];
 
         while (tdiff < 0.25 || tdiff >= 0.4) {
             puzzle = new makepuzzle();
@@ -206,6 +207,7 @@ export default class Main extends Component {
             var currSquare = (3 * squareRowIndex) + squareColIndex;
 
             if (cell !== null) {
+                this.givenNumsIndex.push(index);
                 return ({ value: cell + 1, id: index, row: currRow, collum: currCol, square: currSquare })
             }
             return { value: cell, id: index, row: currRow, collum: currCol, square: currSquare }
@@ -221,7 +223,6 @@ export default class Main extends Component {
         for (var element of this.solution) {
             game = game.concat('' + element);
         }
-
 
         this.solution = solver.solve(game, { result: 'array' });
 
@@ -293,7 +294,7 @@ export default class Main extends Component {
         }
     };
 
-    fillElements = async (entry, pos) => {
+    fillEraseElements = async (entry, pos) => {
         var renderedCells = [];
         var puzzle = [...this.puzzle];
         var matrix = [Array(9).fill(0).map(() => Array(9).fill(0))];
@@ -312,7 +313,7 @@ export default class Main extends Component {
             if (this.puzzle[pos] === null) {
                 return
             }
-            else if (this.puzzle[pos].value === this.solution[pos]) {
+            else if (this.givenNumsIndex.includes(pos)===true) {
                 return;
             }
 
@@ -496,8 +497,8 @@ export default class Main extends Component {
         number = number.map(num => ({ value: num + 1, id: number.indexOf(num) }));
 
         return (<tbody>
-            <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
-                <td className='controller-cell' onClick={() => this.fillElements('erase', selectedCell)} id='erase-btn'><img src={eraserIcon} alt='eraserIcon' /></td>
+            <tr id='controller-row'>{number.map(btnNum => (<td className='controller-cell' onClick={() => this.fillEraseElements(btnNum.id + 1, selectedCell)} key={"" + btnNum.id}>{btnNum.value}</td>))}
+                <td className='controller-cell' onClick={() => this.fillEraseElements('erase', selectedCell)} id='erase-btn'><img src={eraserIcon} alt='eraserIcon' /></td>
                 <td className='controller-cell' onClick={() => this.undoEntries()} id='undo-btn'><svg className='arrow-icon' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 27"><path d="M13.021 0C9.207 0 5.589 1.715 3.125 4.609V.521a.521.521 0 0 0-1.042 0v5.208c0 .288.234.521.521.521h5.208a.522.522 0 1 0 0-1.042H3.977c2.267-2.619 5.566-4.166 9.044-4.166C19.625 1.042 25 6.416 25 13.021 25 19.626 19.625 25 13.021 25 6.416 25 1.042 19.626 1.042 13.021a.521.521 0 0 0-1.042 0c0 7.18 5.84 13.021 13.021 13.021 7.18 0 13.021-5.841 13.021-13.021C26.042 5.841 20.201 0 13.021 0"></path></svg></td>
             </tr>
         </tbody>

@@ -1,8 +1,8 @@
 div.game{
-    /*border: 1px solid blue;*/
+    /*border: 1px solid yellow;*/
     display: flex;
     flex-direction: column;
-    height: 612px;
+    /*height: 612px;*/
     /*height: 100vh;*/
     margin: 0 0 60px 0;
 }
@@ -11,7 +11,7 @@ div#game-page{
     /*border: 1px solid red;*/
     flex: 1;
     width: 100%;
-    height: 700px;
+    /*height: 700px;*/
     display: flex;
     flex-direction: column;
 }
@@ -178,34 +178,24 @@ div#game-board{
 }
 
 div#game-table-container{
-    /*border: 1px solid black;*/
+    /*border: 1px solid yellow;*/
     height: 100%;
+    padding-top: 100%;
     position: relative;
-    max-height: 500px;
 }
 
 table#game-table {
     border: 2px solid black;
     width:100%;
     flex: 1;
-    height: 100%;
-    max-height: 500px;
+    /*max-height: 500px;*/
     display: flex;
     flex-direction: column;
-}
-
-@media screen and (min-width: 750px){
-    #game-table{
-        min-height: 500px;
-        min-width: 500px;
-    }
-}
-
-@media screen and (max-width: 750px){
-    #game-table{
-        min-height: 450px;
-        min-width: 450px;
-    }
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 table#game-table tbody{
@@ -213,6 +203,7 @@ table#game-table tbody{
     width: 100%;
     height: 100%;
     display: flex;
+    flex: 1;
     flex-direction: column;
     position: relative;
     z-index: 0;
@@ -225,6 +216,10 @@ div#game-table-hidden{
     height: 100%;
     width: 100%;
     display: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 div#endgame{
@@ -235,6 +230,10 @@ div#endgame{
     height: 100%;
     width: 100%;
     display: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 div#play-btn{
@@ -400,7 +399,7 @@ div#text-page{
     border-top: 1px solid rgba(110,110,110,0.5);
     flex: 1;
     width: 100%;
-    height: 610px;
+    /*height: 610px;*/
     display: flex;
     flex-direction: column;
 }

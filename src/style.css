@@ -20,7 +20,7 @@ html > body{
 }
 
 html{
-    /*border: 5px solid blue;*/ 
-    min-height: 385vh;
+    /*border: 5px solid blue;*/
     display: flex;
+    flex-direction: column;
 }
