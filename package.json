@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-ga": "^3.1.2",
     "react-scripts": "3.4.1",
     "sudoku": "0.0.3",
     "sudoku-solver-js": "^0.1.4"
