@@ -1,17 +1,12 @@
 div.game{
-    /*border: 1px solid yellow;*/
     display: flex;
     flex-direction: column;
-    /*height: 612px;*/
-    /*height: 100vh;*/
     margin: 0 0 60px 0;
 }
 
 div#game-page{
-    /*border: 1px solid red;*/
     flex: 1;
     width: 100%;
-    /*height: 700px;*/
     display: flex;
     flex-direction: column;
 }
@@ -29,7 +24,6 @@ div#game-page{
 }
 
 div#game-header{
-    /*border-bottom:1px solid  rgba(110,110,110,0.5);*/
     margin: 10px 0 10px;
     display: flex;
     justify-content: space-between;
@@ -46,7 +40,6 @@ div#game-info{
 }
 
 div#timer{
-    /*border: 1px solid black;*/
     display: flex;
     flex-direction: row;
     padding-top: 3px;
@@ -84,8 +77,6 @@ button#start-stop-btn img{
 }
 
 div#selec-newgame{
-    /*border: 1px solid black;*/
-    /*position: relative;*/
     color: #000;
 }
 
@@ -106,7 +97,6 @@ div#selec-newgame-dropdown{
     display: block;
     border: 1px solid rgba(110,110,110,0.5);
     position: absolute;
-    /*width: 100%*;*/
     background-color:#fff;
     border-radius: 5px;
     font-size: 16px;
@@ -124,7 +114,6 @@ div.selec-newgame-item{
 }
 
 div.selec-newgame{
-    /*border: 1px solid black;*/
     border: none;
     width: 100%;
     padding-bottom: 5px;
@@ -148,8 +137,6 @@ div.selec-newgame{
 }
 
 div#game-display{
-    /*border: 2px solid black;*/
-    /*background-color: grey;*/
     flex: 1;
     margin: 5px 0 10px;
     width: 100%;
@@ -159,14 +146,7 @@ div#game-display{
     position: relative;
 }
 
-/*@media screen and (max-width: 200px){
-    #game-display{
-        padding: 0 30%;
-    }
-}*/
-
 div#game-board{
-    /*border: 1px solid red;*/
     margin: 5px auto 10px;
     flex: 1;
     width: 100%;
@@ -178,7 +158,6 @@ div#game-board{
 }
 
 div#game-table-container{
-    /*border: 1px solid yellow;*/
     height: 100%;
     padding-top: 100%;
     position: relative;
@@ -188,7 +167,6 @@ table#game-table {
     border: 2px solid black;
     width:100%;
     flex: 1;
-    /*max-height: 500px;*/
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -199,7 +177,6 @@ table#game-table {
 }
 
 table#game-table tbody{
-    /*border: 1px solid blue;*/
     width: 100%;
     height: 100%;
     display: flex;
@@ -255,7 +232,6 @@ div#play-btn:hover{
 }
 
 div#container-congrats-newgame{
-    /*border: 1px solid #000;*/
     border-radius: 5px;
     position: absolute;
     left: 50%;
@@ -295,7 +271,6 @@ div#congrats-newgame button:hover{
 }
 
 tr.game-row {
-    /*border: 1px solid red;*/
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -347,7 +322,6 @@ div#game-controller{
 }
 
 table#controller-table {
-    /*border: 1px solid black;*/
     width:100%;
     flex: 1;
     height: 100%;
@@ -357,7 +331,6 @@ table#controller-table {
 }
 
 table#controller-table tbody{
-    /*border: 1px solid blue;*/
     flex: 1;
     height: 100%;
     width: 100%;
@@ -366,7 +339,6 @@ table#controller-table tbody{
 }
 
 tr#controller-row {
-    /*border: 1px solid red;*/
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -395,11 +367,9 @@ td.controller-cell:hover{
 }
 
 div#text-page{
-    /*border: 1px solid red;*/
     border-top: 1px solid rgba(110,110,110,0.5);
     flex: 1;
     width: 100%;
-    /*height: 610px;*/
     display: flex;
     flex-direction: column;
 }

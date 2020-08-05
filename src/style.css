@@ -6,7 +6,6 @@
 }
 
 html body{
-    /*border: 10px solid green;*/
     font-family: Arial, Helvetica, sans-serif;
     color: #333;
     display: flex;
@@ -20,7 +19,6 @@ html > body{
 }
 
 html{
-    /*border: 5px solid blue;*/
     display: flex;
     flex-direction: column;
 }
