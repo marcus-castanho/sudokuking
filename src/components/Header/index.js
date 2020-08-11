@@ -6,7 +6,7 @@ const Header = () => (
     <header id='main-header'>
         <div id='master-header'>
             <div id='content-header'>
-                <a id="sudoku-king-logo" href="https://sudokuking.herokuapp.com/" target='_blank' rel="noopener noreferrer"> <img id='sudoku-king-logo-img' src={sudokuKingLogo} alt='sudoku-king-logo' /></a>
+                <a id="sudoku-king-logo" href="http://sudoku-king.com/" target='_blank' rel="noopener noreferrer"> <img id='sudoku-king-logo-img' src={sudokuKingLogo} alt='sudoku-king-logo' /></a>
             </div>
             <select id="lang-select">
                 <option value="0">en</option>
