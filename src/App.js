@@ -6,20 +6,19 @@ import "./style.css";
 import ReactGA from 'react-ga';
 
 
-function googleAn() {
+
+const App = () => {
+
   useEffect(() => {
     ReactGA.initialize('UA-175176015-1');
     ReactGA.pageview('/');
   }, [])
 
-}
-
-const App = () => (
-  <div className="App">
+  return (<div className="App">
     <Header />
     <Main />
     <Footer />
-  </div>
-);
+  </div>)
+};
 
 export default App;
