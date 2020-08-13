@@ -6,7 +6,7 @@ You can try it [here now!](https://www.sudoku-king.com).
 ## Features
 
 - Input values into cells
-- Erase previous inputed values
+- Erase previous inputted values
 - Go back sequentially to previous puzzle state
 - Check and show wrong entries
 - Uses LocalStorage to save the current game state
