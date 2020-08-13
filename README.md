@@ -1,7 +1,7 @@
 # Sudoku King
  A sudoku web application developed in ReactJS and a timer to track how long it takes for you to solve the puzzle.
 
-You can try it [here now!](https://www.sudoku-king.com).
+You can try it [here now!](https://www.sudoku-king.com)
 
 ## Features
 
