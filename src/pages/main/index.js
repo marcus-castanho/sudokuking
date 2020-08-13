@@ -313,7 +313,7 @@ export default class Main extends Component {
             if (this.puzzle[pos] === null) {
                 return
             }
-            else if (this.givenNumsIndex.includes(pos)===true) {
+            else if (this.givenNumsIndex.includes(pos) === true) {
                 return;
             }
 
