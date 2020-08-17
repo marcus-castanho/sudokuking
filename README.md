@@ -1,5 +1,7 @@
 # Sudoku King
- A sudoku web application developed in ReactJS and a timer to track how long it takes for you to solve the puzzle.
+ A sudoku web application developed with ReactJS and a timer to track how long it takes for you to solve the puzzle.
+
+ This project is part of a study of implementation of a website developed with ReactJS and the process of deployment, hosting and indexation of a website on a search engine, making it visible.
 
 You can try it [here now!](https://www.sudoku-king.com)
 
@@ -12,7 +14,8 @@ You can try it [here now!](https://www.sudoku-king.com)
 - Uses LocalStorage to save the current game state
 
 ## Resources
-
+- UI in [ReactJS](https://reactjs.org/)
+- Deployment and hosting in [Vercel](https://vercel.com/)
 - Sudoku puzzle generator: [https://github.com/dachev/sudoku](https://github.com/dachev/sudoku)
 - Sudoku puzzle solver: [https://github.com/SamirHodzic/sudoku-solver-js](https://github.com/SamirHodzic/sudoku-solver-js)
 - Timer function adapted from: [https://github.com/ee92/react-simple-timer](https://github.com/ee92/react-simple-timer)
