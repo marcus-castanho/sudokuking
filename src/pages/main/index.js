@@ -27,6 +27,152 @@ export default class Main extends Component {
         this.startTimer = this.startTimer.bind(this);
     }
 
+    //API REQUESTS BEGIN //////////////////////////////////////////////////////////////////
+    registerAPI = async () => {
+        fetch("http://localhost:3001/auth/register", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "username": "test",
+                "email": "test@gmail.com",
+                "password": "test"
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//responds token and uses in SHOW USERS; UPDATE USER SCORE; DELETE USER >> login >> SAVE IN BROWSER CACHE TOKEN and userID
+
+    authenticateAPI = () => {
+        fetch("http://localhost:3001/auth/authenticate", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test@gmail.com",//get info from login input
+                "password": "test"//get info from login input
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//responds token and uses in SHOW USERS; UPDATE USER SCORE; DELETE USER >> login >> SAVE IN BROWSER CACHE TOKEN and userID
+
+    forgotPassworkdAPI = () => {
+        fetch("http://localhost:3001/auth/forgot_password", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test@gmail.com"//get info from input
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//sends email contaning reset TOKEN which will be used in RESET PASSWORD 
+
+    resetPasswordAPI = () => {
+        fetch("http://localhost:3001/auth/reset_password", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test@gmail.com",//get info from input
+                "token": "TOKEN HERE",//develop way to put token here (at first a simple input field)
+                "password": "NEW PASSWORD HERE"//get info from input
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    listUsersAPI = () => {
+        fetch("http://localhost:3001/list/users_list", {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//gets list of users and score => show in frontend
+
+    showUserAPI = () => {
+        fetch("http://localhost:3001/score/user/USER ID HERE", {// insert user ID in url => gets the score of logged user, no need of input
+            "method": "GET",
+            "headers": {
+                "authorization": "TOKEN",////inser token(bearer token = secret+hash userID) from CACHE 
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }// gets username and score of logged user => show in frontend
+
+    updateUserScoreAPI = () => {
+        fetch("http://localhost:3001/score/update_score", {
+            "method": "PUT",
+            "headers": {
+                "authorization": "TOKEN",////inser token(bearer token = secret+hash userID) from CACHE 
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "score": "NEW SCORE HERE"//get SCORE FROM FRONT END APP AS SOON AS PLAYER FINISHES GAME
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }// gets username and score to update front end
+
+    deleteUserAPI = () => {
+        fetch("http://localhost:3001/score/user/USER ID HERE", {// insert user ID in url 
+            "method": "DEL",
+            "headers": {
+                "authorization": "TOKEN",////get token(bearer token = secret+hash userID) from CACHE 
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//redirect to new main page
+
+    //END API REQUESTS //////////////////////////////////////////////////////////////////
+
     initialConfig = async () => {
         var btnIcon = document.getElementById('start-stop-btn');
         var gameTableRendered = document.getElementById('game-table');
@@ -519,6 +665,7 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <button id='check-btn' onClick={() => this.checkEntries()}>Check game</button>
+                        <button id='teste-API' onClick={() => this.registerAPI()}>oi</button>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
