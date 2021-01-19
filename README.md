@@ -21,6 +21,7 @@ You can try it [here now!](https://www.sudoku-king.com)
 - Timer function adapted from: [https://github.com/ee92/react-simple-timer](https://github.com/ee92/react-simple-timer)
 
 ## To-dos
+Currently developping a back-end application to serve Sudoku King app and manage users info in database: [sudokuking_users_api](https://github.com/marcus-castanho/sudokuking_users_api)
 
 - Enable different difficulties
 - Develop an identification functionality
