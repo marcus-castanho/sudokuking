@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { SudokuSolver } from 'sudoku-solver-js';
-import playBtn from '../../images/playBtn.png'
-import playBtnTimer from '../../images/playBtnTimer.png'
-import pauseBtnTimer from '../../images/pauseBtnTimer.png'
-import eraserIcon from '../../images/eraserIcon.png'
-import sudokuChecked from '../../images/sudokuChecked.PNG'
-import sudokuMagazineBw from '../../images/sudoku-magazine-bw.png'
-import sudokuPossibilities from '../../images/sudokuPossibilities.PNG'
+import docCookies from 'doc-cookies';
+import playBtn from '../../images/playBtn.png';
+import playBtnTimer from '../../images/playBtnTimer.png';
+import pauseBtnTimer from '../../images/pauseBtnTimer.png';
+import eraserIcon from '../../images/eraserIcon.png';
+import sudokuChecked from '../../images/sudokuChecked.PNG';
+import sudokuMagazineBw from '../../images/sudoku-magazine-bw.png';
+import sudokuPossibilities from '../../images/sudokuPossibilities.PNG';
 
 export default class Main extends Component {
     container = React.createRef();
@@ -18,6 +19,7 @@ export default class Main extends Component {
         counter: 0,
         selectedCell: null,
         newgameOpen: false,
+        username:'',
     };
 
     entries = [];
@@ -41,12 +43,23 @@ export default class Main extends Component {
             })
         })
             .then(res => {
-                res.json().then(res => console.log(res))
+                res.json().then(res => {
+                    if(!res.user){
+                        console.log(res);
+                        return 
+                    }
+                    docCookies.setItem('userID', res.user._id, 3600);
+                    this.setState({ usermane: res.user.username })
+
+                    docCookies.setItem('authToken', res.token, 3600);
+
+                    return
+                });
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
             })
-    }//responds token and uses in SHOW USERS; UPDATE USER SCORE; DELETE USER >> login >> SAVE IN BROWSER CACHE TOKEN and userID
+    }
 
     authenticateAPI = () => {
         fetch("http://localhost:3001/auth/authenticate", {
@@ -60,12 +73,23 @@ export default class Main extends Component {
             })
         })
             .then(res => {
-                res.json().then(res => console.log(res))
+                res.json().then(res => {
+                    if(!res.user){
+                        console.log(res);
+                        return 
+                    }
+                    docCookies.setItem('userID', res.user._id, 3600);
+                    this.setState({ usermane: res.user.username })
+
+                    docCookies.setItem('authToken', res.token, 3600);
+
+                    return
+                })
             })
             .catch(err => {
-                console.log(err)
+                console.log(err);
             })
-    }//responds token and uses in SHOW USERS; UPDATE USER SCORE; DELETE USER >> login >> SAVE IN BROWSER CACHE TOKEN and userID
+    }
 
     forgotPassworkdAPI = () => {
         fetch("http://localhost:3001/auth/forgot_password", {
@@ -121,10 +145,12 @@ export default class Main extends Component {
     }//gets list of users and score => show in frontend
 
     showUserAPI = () => {
-        fetch("http://localhost:3001/score/user/USER ID HERE", {// insert user ID in url => gets the score of logged user, no need of input
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
+        fetch(`http://localhost:3001/score/user/${docCookies.getItem('userID')}`, {
             "method": "GET",
             "headers": {
-                "authorization": "TOKEN",////inser token(bearer token = secret+hash userID) from CACHE 
+                "authorization": bearerToken,
                 "Content-Type": "application/json"
             },
         })
@@ -136,15 +162,17 @@ export default class Main extends Component {
             })
     }// gets username and score of logged user => show in frontend
 
-    updateUserScoreAPI = () => {
+    updateUserScoreAPI = (newScore) => {
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
         fetch("http://localhost:3001/score/update_score", {
             "method": "PUT",
             "headers": {
-                "authorization": "TOKEN",////inser token(bearer token = secret+hash userID) from CACHE 
+                "authorization": bearerToken,
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "score": "NEW SCORE HERE"//get SCORE FROM FRONT END APP AS SOON AS PLAYER FINISHES GAME
+                "score": newScore
             })
         })
             .then(res => {
@@ -153,13 +181,15 @@ export default class Main extends Component {
             .catch(err => {
                 console.log(err)
             })
-    }// gets username and score to update front end
+    }
 
     deleteUserAPI = () => {
-        fetch("http://localhost:3001/score/user/USER ID HERE", {// insert user ID in url 
-            "method": "DEL",
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
+        fetch(`http://localhost:3001/score/delete_users/${docCookies.getItem('userID')}`, {
+            "method": "DELETE",
             "headers": {
-                "authorization": "TOKEN",////get token(bearer token = secret+hash userID) from CACHE 
+                "authorization": bearerToken,
                 "Content-Type": "application/json"
             },
         })
@@ -169,9 +199,15 @@ export default class Main extends Component {
             .catch(err => {
                 console.log(err)
             })
-    }//redirect to new main page
+    }
 
     //END API REQUESTS //////////////////////////////////////////////////////////////////
+
+    logoutUser = () =>{
+        docCookies.removeItem('userID');
+        docCookies.removeItem('authToken');
+        this.setState({username:''});
+    }
 
     initialConfig = async () => {
         var btnIcon = document.getElementById('start-stop-btn');
@@ -371,6 +407,7 @@ export default class Main extends Component {
         }
 
         this.solution = solver.solve(game, { result: 'array' });
+        console.log(this.solution);//TESTE: RESPOSTA DO JOGO
 
         puzzle = [...this.puzzle];
 
@@ -616,6 +653,9 @@ export default class Main extends Component {
             endgame.style.display = "block";
 
             this.stopTimer();
+            if (docCookies.setItem('authToken')){
+                this.updateUserScoreAPI(this.state.timeData.time);
+            }
         }
     }
 
@@ -665,7 +705,12 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <button id='check-btn' onClick={() => this.checkEntries()}>Check game</button>
-                        <button id='teste-API' onClick={() => this.registerAPI()}>oi</button>
+                        <button id='teste-API' onClick={() => this.registerAPI()}>reg</button>
+                        <button id='teste-API' onClick={() => this.authenticateAPI()}>auth</button>
+                        <button id='teste-API' onClick={() => this.listUsersAPI()}>list</button>
+                        <button id='teste-API' onClick={() => this.showUserAPI()}>show</button>
+                        <button id='teste-API' onClick={() => this.deleteUserAPI()}>delete</button>
+                        <button id='teste-API' onClick={() => this.logoutUser()}>logout</button>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
