@@ -14,11 +14,12 @@ const App = () => {
     ReactGA.pageview('/');
   }, [])
 
-  return (<div className="App">
-    <Header />
-    <Routes />
-    <Footer />
-  </div>)
+  return (
+    <div className="App">
+      <Header />
+      <Routes />
+      <Footer />
+    </div>)
 };
 
 export default App;

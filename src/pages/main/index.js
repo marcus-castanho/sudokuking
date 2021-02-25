@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { SudokuSolver } from 'sudoku-solver-js';
@@ -19,39 +19,55 @@ export default class Main extends Component {
         counter: 0,
         selectedCell: null,
         newgameOpen: false,
-        username:'',
+        username: '',
+        users_list: [],
+        firstRender: true
     };
 
     entries = [];
 
     componentDidMount() {
         this.generateRamdomGame('easy');
+        this.onPageLoad(this.state.firstRender);
         this.startTimer = this.startTimer.bind(this);
     }
 
+    onPageLoad = async (firstRender) => {
+        if (firstRender === true) {
+            this.listUsersAPI();
+            await this.setState({ firstRender: false })
+
+            if (docCookies.getItem('username') !== null) {
+                await this.setState({ username: docCookies.getItem('username') });
+            }
+        }
+        return
+    }
+
     //API REQUESTS BEGIN //////////////////////////////////////////////////////////////////
-    registerAPI = async () => {
+    registerAPI = () => {
         fetch("http://localhost:3001/auth/register", {
             "method": "POST",
             "headers": {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "username": "test",
-                "email": "test@gmail.com",
-                "password": "test"
+                "username": "test12",
+                "email": "test12@gmail.com",
+                "password": "test12"
             })
         })
             .then(res => {
                 res.json().then(res => {
-                    if(!res.user){
+                    if (!res.user) {
                         console.log(res);
-                        return 
+                        return
                     }
-                    docCookies.setItem('userID', res.user._id, 3600);
-                    this.setState({ usermane: res.user.username })
+                    docCookies.setItem('userID', res.user._id);
+                    this.setState({ username: res.user.username });
+                    docCookies.setItem('username', res.user.username);
 
-                    docCookies.setItem('authToken', res.token, 3600);
+                    docCookies.setItem('authToken', res.token);
 
                     return
                 });
@@ -68,20 +84,20 @@ export default class Main extends Component {
                 "Content-Type": "application/json"
             },
             "body": JSON.stringify({
-                "email": "test@gmail.com",//get info from login input
-                "password": "test"//get info from login input
+                "email": "test1@gmail.com",//get info from login input
+                "password": "test1"//get info from login input
             })
         })
             .then(res => {
                 res.json().then(res => {
-                    if(!res.user){
+                    if (!res.user) {
                         console.log(res);
-                        return 
+                        return
                     }
-                    docCookies.setItem('userID', res.user._id, 3600);
-                    this.setState({ usermane: res.user.username })
+                    docCookies.setItem('userID', res.user._id);
+                    this.setState({ username: res.user.username });
 
-                    docCookies.setItem('authToken', res.token, 3600);
+                    docCookies.setItem('authToken', res.token);
 
                     return
                 })
@@ -129,7 +145,7 @@ export default class Main extends Component {
             })
     }
 
-    listUsersAPI = () => {
+    listUsersAPI = async () => {
         fetch("http://localhost:3001/list/users_list", {
             "method": "GET",
             "headers": {
@@ -137,7 +153,10 @@ export default class Main extends Component {
             },
         })
             .then(res => {
-                res.json().then(res => console.log(res))
+                res.json().then(res => {
+                    this.setState({ users_list: res.users_list });
+                }
+                )
             })
             .catch(err => {
                 console.log(err)
@@ -203,10 +222,10 @@ export default class Main extends Component {
 
     //END API REQUESTS //////////////////////////////////////////////////////////////////
 
-    logoutUser = () =>{
+    logoutUser = () => {
         docCookies.removeItem('userID');
         docCookies.removeItem('authToken');
-        this.setState({username:''});
+        this.setState({ username: '' });
     }
 
     initialConfig = async () => {
@@ -653,7 +672,7 @@ export default class Main extends Component {
             endgame.style.display = "block";
 
             this.stopTimer();
-            if (docCookies.setItem('authToken')){
+            if (docCookies.setItem('authToken')) {
                 this.updateUserScoreAPI(this.state.timeData.time);
             }
         }
@@ -691,6 +710,39 @@ export default class Main extends Component {
         )
     };
 
+    renderScoreRank = () => {
+        const users_list = this.state.users_list;
+        const username = this.state.username;
+        let user = { user: null, rank: null };
+
+        if (username !== '') {
+            for (let i; i < users_list.length; i++) {
+                if (users_list[i].username === username) {
+                    user.user = users_list[i];
+                    user.rank = i;
+                    break
+                }
+            }
+            if (user.rank >= 10) {
+                users_list.splice(10);
+                users_list.push(user.user);
+            }
+        }
+
+        return (
+            <tbody>
+                {users_list.map(row => (
+                    <tr className='score-rank-row' key={users_list.indexOf(row)}>
+                        <td className='score-rank-username' key={`${users_list.indexOf(row)}0`}>{row.username}</td>
+                        <td className='score-rank-score' key={`${users_list.indexOf(row)}1`}>{row.score}</td>
+                    </tr>
+                ))}
+            </tbody>)
+    }
+
+    clique = () => {
+        console.log(this.state)
+    }
 
     render() {
 
@@ -711,6 +763,7 @@ export default class Main extends Component {
                         <button id='teste-API' onClick={() => this.showUserAPI()}>show</button>
                         <button id='teste-API' onClick={() => this.deleteUserAPI()}>delete</button>
                         <button id='teste-API' onClick={() => this.logoutUser()}>logout</button>
+                        <button id='teste-API' onClick={() => this.clique()}>clique</button>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
@@ -746,6 +799,13 @@ export default class Main extends Component {
                         </div>
                     </div>
                     <div id='adsense'></div>
+                </div>
+                <div id='score-rank'>
+                    <div id='score-rank-container'>
+                        <table id='score-rank-table'>
+                            {this.renderScoreRank()}
+                        </table>
+                    </div>
                 </div>
                 <div id='text-page'>
                     <div className='textContent'>
