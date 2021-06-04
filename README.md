@@ -3,7 +3,7 @@
 
  This project is part of a study of implementation of a website developed with ReactJS and the process of deployment, hosting and indexation of a website on a search engine, making it visible.
 
-You can try it [here now!](https://www.sudoku-king.com)
+You can try it [here now!](https://sudokuking.vercel.app/)
 
 ## Features
 
