@@ -26,11 +26,10 @@ div #content-header {
 #content-header a{
     text-decoration: none;
     font-weight: bold;
-    font-size: 20px;
-    color: #000000;    
+    font-size: 20px; 
 }
 
-button#signin-btn{
+header#main-header button{
     padding: 5px;
     text-decoration: none;
     background-color:white;
@@ -39,8 +38,66 @@ button#signin-btn{
     font-size: 16px;
 }
 
-button#signin-btn:hover{
+header#main-header button:hover{
     cursor: pointer;
+}
+
+div #account-controller{
+    position: relative;
+}
+
+div .account-options{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    text-decoration: none;
+    background-color:white;
+    border: 1px solid rgba(110, 110, 110, 0.5);
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 3;
+    display: table-column;
+    text-align: center;
+}
+
+div .account-options>*{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+p#forgotPassword-options{
+    font-size: 12px;
+    text-align: left;
+    width: 100%;
+}
+
+div .account-options p{
+    font-size: 12px;
+    text-align: left;
+    width: 100%;
+    min-width: 11rem;
+}
+
+div .account-options  button{
+    width: 100%;
+}
+
+p#forgotPassword-options:hover{
+    cursor: pointer;
+}
+
+a#signin-options{
+    font: inherit;
+}
+
+a#signin-options:hover {
+    cursor: pointer;
+}
+
+.input-title{
+   font-weight: bold;
 }
 
 select#lang-select{

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Main from './pages/main';
 import "./style.css";
 import ReactGA from 'react-ga';
 import Routes from './routes'
@@ -15,11 +14,12 @@ const App = () => {
     ReactGA.pageview('/');
   }, [])
 
-  return (<div className="App">
-    <Header />
-    <Routes />
-    <Footer />
-  </div>)
+  return (
+    <div className="App">
+      <Header />
+      <Routes />
+      <Footer />
+    </div>)
 };
 
 export default App;

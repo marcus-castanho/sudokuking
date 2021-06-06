@@ -1,14 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import "./style.css";
 import { makepuzzle, solvepuzzle } from "sudoku";
 import { SudokuSolver } from 'sudoku-solver-js';
-import playBtn from '../../images/playBtn.png'
-import playBtnTimer from '../../images/playBtnTimer.png'
-import pauseBtnTimer from '../../images/pauseBtnTimer.png'
-import eraserIcon from '../../images/eraserIcon.png'
-import sudokuChecked from '../../images/sudokuChecked.PNG'
-import sudokuMagazineBw from '../../images/sudoku-magazine-bw.png'
-import sudokuPossibilities from '../../images/sudokuPossibilities.PNG'
+import docCookies from 'doc-cookies';
+import playBtn from '../../images/playBtn.png';
+import playBtnTimer from '../../images/playBtnTimer.png';
+import pauseBtnTimer from '../../images/pauseBtnTimer.png';
+import eraserIcon from '../../images/eraserIcon.png';
+import sudokuChecked from '../../images/sudokuChecked.PNG';
+import sudokuMagazineBw from '../../images/sudoku-magazine-bw.png';
+import sudokuPossibilities from '../../images/sudokuPossibilities.PNG';
 
 export default class Main extends Component {
     container = React.createRef();
@@ -18,13 +19,213 @@ export default class Main extends Component {
         counter: 0,
         selectedCell: null,
         newgameOpen: false,
+        username: '',
+        users_list: [],
+        firstRender: true
     };
 
     entries = [];
 
     componentDidMount() {
         this.generateRamdomGame('easy');
+        this.onPageLoad(this.state.firstRender);
         this.startTimer = this.startTimer.bind(this);
+    }
+
+    onPageLoad = async (firstRender) => {
+        if (firstRender === true) {
+            this.listUsersAPI();
+            await this.setState({ firstRender: false })
+
+            if (docCookies.getItem('username') !== null) {
+                await this.setState({ username: docCookies.getItem('username') });
+            }
+        }
+        return
+    }
+
+    //API REQUESTS BEGIN //////////////////////////////////////////////////////////////////
+    registerAPI = () => {
+        fetch("http://localhost:3001/auth/register", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "username": "test12",
+                "email": "test12@gmail.com",
+                "password": "test12"
+            })
+        })
+            .then(res => {
+                res.json().then(res => {
+                    if (!res.user) {
+                        console.log(res);
+                        return
+                    }
+                    docCookies.setItem('userID', res.user._id);
+                    this.setState({ username: res.user.username });
+                    docCookies.setItem('username', res.user.username);
+
+                    docCookies.setItem('authToken', res.token);
+
+                    return
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    authenticateAPI = () => {
+        fetch("http://localhost:3001/auth/authenticate", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test1@gmail.com",//get info from login input
+                "password": "test1"//get info from login input
+            })
+        })
+            .then(res => {
+                res.json().then(res => {
+                    if (!res.user) {
+                        console.log(res);
+                        return
+                    }
+                    docCookies.setItem('userID', res.user._id);
+                    this.setState({ username: res.user.username });
+
+                    docCookies.setItem('authToken', res.token);
+
+                    return
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    forgotPassworkdAPI = () => {
+        fetch("http://localhost:3001/auth/forgot_password", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test@gmail.com"//get info from input
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//sends email contaning reset TOKEN which will be used in RESET PASSWORD 
+
+    resetPasswordAPI = () => {
+        fetch("http://localhost:3001/auth/reset_password", {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "email": "test@gmail.com",//get info from input
+                "token": "TOKEN HERE",//develop way to put token here (at first a simple input field)
+                "password": "NEW PASSWORD HERE"//get info from input
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    listUsersAPI = async () => {
+        fetch("http://localhost:3001/list/users_list", {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => {
+                    this.setState({ users_list: res.users_list });
+                }
+                )
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }//gets list of users and score => show in frontend
+
+    showUserAPI = () => {
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
+        fetch(`http://localhost:3001/score/user/${docCookies.getItem('userID')}`, {
+            "method": "GET",
+            "headers": {
+                "authorization": bearerToken,
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }// gets username and score of logged user => show in frontend
+
+    updateUserScoreAPI = (newScore) => {
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
+        fetch("http://localhost:3001/score/update_score", {
+            "method": "PUT",
+            "headers": {
+                "authorization": bearerToken,
+                "Content-Type": "application/json"
+            },
+            "body": JSON.stringify({
+                "score": newScore
+            })
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    deleteUserAPI = () => {
+        const bearerToken = 'Bearer ' + docCookies.getItem('authToken');
+
+        fetch(`http://localhost:3001/score/delete_users/${docCookies.getItem('userID')}`, {
+            "method": "DELETE",
+            "headers": {
+                "authorization": bearerToken,
+                "Content-Type": "application/json"
+            },
+        })
+            .then(res => {
+                res.json().then(res => console.log(res))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    //END API REQUESTS //////////////////////////////////////////////////////////////////
+
+    logoutUser = () => {
+        docCookies.removeItem('userID');
+        docCookies.removeItem('authToken');
+        this.setState({ username: '' });
     }
 
     initialConfig = async () => {
@@ -225,6 +426,7 @@ export default class Main extends Component {
         }
 
         this.solution = solver.solve(game, { result: 'array' });
+        console.log(this.solution);//TESTE: RESPOSTA DO JOGO
 
         puzzle = [...this.puzzle];
 
@@ -470,6 +672,9 @@ export default class Main extends Component {
             endgame.style.display = "block";
 
             this.stopTimer();
+            if (docCookies.setItem('authToken')) {
+                this.updateUserScoreAPI(this.state.timeData.time);
+            }
         }
     }
 
@@ -505,6 +710,39 @@ export default class Main extends Component {
         )
     };
 
+    renderScoreRank = () => {
+        const users_list = this.state.users_list;
+        const username = this.state.username;
+        let user = { user: null, rank: null };
+
+        if (username !== '') {
+            for (let i; i < users_list.length; i++) {
+                if (users_list[i].username === username) {
+                    user.user = users_list[i];
+                    user.rank = i;
+                    break
+                }
+            }
+            if (user.rank >= 10) {
+                users_list.splice(10);
+                users_list.push(user.user);
+            }
+        }
+
+        return (
+            <tbody>
+                {users_list.map(row => (
+                    <tr className='score-rank-row' key={users_list.indexOf(row)}>
+                        <td className='score-rank-username' key={`${users_list.indexOf(row)}0`}>{row.username}</td>
+                        <td className='score-rank-score' key={`${users_list.indexOf(row)}1`}>{row.score}</td>
+                    </tr>
+                ))}
+            </tbody>)
+    }
+
+    clique = () => {
+        console.log(this.state)
+    }
 
     render() {
 
@@ -519,6 +757,13 @@ export default class Main extends Component {
                             </div>
                         </div>
                         <button id='check-btn' onClick={() => this.checkEntries()}>Check game</button>
+                        <button id='teste-API' onClick={() => this.registerAPI()}>reg</button>
+                        <button id='teste-API' onClick={() => this.authenticateAPI()}>auth</button>
+                        <button id='teste-API' onClick={() => this.listUsersAPI()}>list</button>
+                        <button id='teste-API' onClick={() => this.showUserAPI()}>show</button>
+                        <button id='teste-API' onClick={() => this.deleteUserAPI()}>delete</button>
+                        <button id='teste-API' onClick={() => this.logoutUser()}>logout</button>
+                        <button id='teste-API' onClick={() => this.clique()}>clique</button>
                         <div id='selec-newgame'>
                             <button id='btn-newgame' onClick={() => this.handleButtonClick('newgameOpt')}>New Game</button>
                         </div>
@@ -554,6 +799,13 @@ export default class Main extends Component {
                         </div>
                     </div>
                     <div id='adsense'></div>
+                </div>
+                <div id='score-rank'>
+                    <div id='score-rank-container'>
+                        <table id='score-rank-table'>
+                            {this.renderScoreRank()}
+                        </table>
+                    </div>
                 </div>
                 <div id='text-page'>
                     <div className='textContent'>
