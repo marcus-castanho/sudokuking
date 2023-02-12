@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import {
     checkButtonStyle,
     gameHeaderStyle,
@@ -6,14 +6,17 @@ import {
     gamePageStyle,
 } from './style';
 import './style.css';
-import { Timer } from '../Timer';
 
-export const GameHeader = () => {
+export type GameHeaderProps = {
+    children: ReactNode;
+};
+
+export const GameHeader: FC<GameHeaderProps> = ({ children }) => {
     return (
         <div id="game-page" style={gamePageStyle}>
             <div id="game-header" style={gameHeaderStyle}>
                 <div id="game-info" style={gameInfoStyle}>
-                    <Timer />
+                    {children}
                 </div>
                 <button
                     id="check-btn"

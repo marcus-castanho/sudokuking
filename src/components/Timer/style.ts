@@ -6,7 +6,7 @@ export const timerStyle: CSSProperties = {
     paddingTop: '3px',
 };
 
-export const startStopButtonStyle: CSSProperties = {
+export const timerButtonStyle: CSSProperties = {
     border: 'none',
     backgroundColor: '#fff',
     marginLeft: '5px',

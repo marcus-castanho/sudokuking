@@ -1,12 +1,16 @@
 import React, { FC } from 'react';
-import { useTimer } from './hooks';
-import { startStopButtonStyle, timerStyle } from './style';
+import { timerButtonStyle, timerStyle } from './style';
 import { format } from 'date-fns';
 import './style.css';
+import { useTimer } from './hooks';
 
-export const Timer: FC = () => {
-    const { counter, startStopTimer, resetTimer } = useTimer();
+export type TimerProps = ReturnType<typeof useTimer>;
 
+export const Timer: FC<TimerProps> = ({
+    counter,
+    startStopTimer,
+    resetTimer,
+}) => {
     return (
         <div id="timer" style={timerStyle}>
             <p style={{ fontWeight: 'bolder' }}>
@@ -17,13 +21,17 @@ export const Timer: FC = () => {
             <button
                 id="start-stop-btn"
                 className="stop"
-                style={startStopButtonStyle}
+                style={timerButtonStyle}
                 onClick={startStopTimer}
             >
                 Start/Stop
             </button>
-            <button style={startStopButtonStyle} onClick={resetTimer}>
-                reset{' '}
+            <button
+                id="reset-btn"
+                style={timerButtonStyle}
+                onClick={resetTimer}
+            >
+                Reset
             </button>
         </div>
     );
