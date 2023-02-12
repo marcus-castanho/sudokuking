@@ -53,16 +53,6 @@ div.selec-newgame {
     color: #fff;
 }
 
-div#game-display {
-    flex: 1;
-    margin: 5px 0 10px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-}
-
 div#game-board {
     margin: 5px auto 10px;
     flex: 1;
@@ -72,12 +62,6 @@ div#game-board {
     flex-direction: column;
     position: relative;
     padding-top: 0;
-}
-
-div#game-table-container {
-    height: 100%;
-    padding-top: 100%;
-    position: relative;
 }
 
 table#game-table {
@@ -115,20 +99,6 @@ div#game-table-hidden {
     right: 0;
 }
 
-div#endgame {
-    border: 2px solid #000;
-    background-color: #fff;
-    z-index: 1;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    display: none;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
 div#play-btn {
     z-index: 3;
     position: absolute;
@@ -147,38 +117,9 @@ div#play-btn:hover {
     cursor: pointer;
 }
 
-div#container-congrats-newgame {
-    border-radius: 5px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-}
-
-div#congrats-newgame {
-    border: 1px solid #fff;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: #000;
-    text-align: center;
-    color: white;
-}
-
 p#solve-time {
     font-weight: bold;
     margin: 0.5rem 0 0 0;
-}
-
-div#congrats-newgame button {
-    background-color: white;
-    border: 1px solid #000;
-    margin: 0.5rem 1rem;
-    padding: 5px 8px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
 }
 
 div#congrats-newgame button:hover {
@@ -230,23 +171,6 @@ td.col5 {
 td.game-cell:hover {
     background-color: rgba(110, 110, 110, 0.5);
     cursor: pointer;
-}
-
-div#game-controller {
-    width: 100%;
-    height: 45px;
-    max-width: 500px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: row;
-}
-
-table#controller-table {
-    width: 100%;
-    flex: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
 }
 
 table#controller-table tbody {

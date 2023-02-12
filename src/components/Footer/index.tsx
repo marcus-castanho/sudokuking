@@ -8,7 +8,19 @@ const achorImagestyle = {
 };
 
 export const Footer: FC = () => (
-    <footer id="main-footer">
+    <footer
+        id="main-footer"
+        style={{
+            padding: '0 15%',
+            height: '60px',
+            width: '100%',
+            borderTop: '1px solid rgba(110,110,110,0.5)',
+            position: 'absolute',
+            bottom: '0',
+            backgroundColor: '#fff',
+            marginBottom: '0',
+        }}
+    >
         <div
             id="master-footer"
             style={{
