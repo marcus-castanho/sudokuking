@@ -25,7 +25,7 @@ export const GameHeader = () => {
                 >
                     Check game
                 </button>
-                <div id="selec-newgame">
+                <div id="select-newgame">
                     <button
                         id="btn-newgame"
                         onClick={
