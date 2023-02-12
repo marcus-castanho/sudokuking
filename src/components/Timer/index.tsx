@@ -10,6 +10,7 @@ export const Timer: FC<TimerProps> = ({
     counter,
     startStopTimer,
     resetTimer,
+    isOn,
 }) => {
     return (
         <div id="timer" style={timerStyle}>
@@ -24,7 +25,7 @@ export const Timer: FC<TimerProps> = ({
                 style={timerButtonStyle}
                 onClick={startStopTimer}
             >
-                Start/Stop
+                {isOn ? 'Stop' : 'Start'}
             </button>
             <button
                 id="reset-btn"

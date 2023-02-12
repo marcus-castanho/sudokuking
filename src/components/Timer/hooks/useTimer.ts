@@ -7,6 +7,7 @@ import { useState } from 'react';
  * @return {number} Timer.counter - Value of timer counter in miliseconds - 0 if the timer is reset
  * @return {startStopTimer} Timer.startStopTimer
  * @return {resetTimer} Timer.resetTimer
+ * @return {boolean} Timer.isOn
  */
 export const useTimer = () => {
     const [timerCounter, setTimerCounter] = useState({
@@ -16,29 +17,24 @@ export const useTimer = () => {
     });
     const [timerId, setTimerId] = useState<number>();
 
+    const timerFn = () =>
+        setTimerCounter((state) => {
+            const { value } = state;
+            const now = Date.now();
+            const midnightTime = new Date(now).setHours(0, 0, 0);
+            const startTime =
+                state.startTime === 0 ? midnightTime : state.startTime;
+            const updatedValue = value === 0 ? midnightTime : value + 1000;
+            return {
+                value: updatedValue,
+                startTime,
+                isOn: true,
+            };
+        });
+
     const startTimer = async () => {
-        setTimerId(
-            setInterval(
-                () =>
-                    setTimerCounter((state) => {
-                        const { value } = state;
-                        const now = Date.now();
-                        const midnightTime = new Date(now).setHours(0, 0, 0);
-                        const startTime =
-                            state.startTime === 0
-                                ? midnightTime
-                                : state.startTime;
-                        const updatedValue =
-                            value === 0 ? midnightTime : value + 1000;
-                        return {
-                            value: updatedValue,
-                            startTime,
-                            isOn: true,
-                        };
-                    }),
-                1000,
-            ),
-        );
+        timerFn();
+        setTimerId(setInterval(timerFn, 1000));
     };
 
     const stopTimer = async () => {
@@ -68,5 +64,10 @@ export const useTimer = () => {
         });
     };
 
-    return { counter: timerCounter.value, startStopTimer, resetTimer };
+    return {
+        counter: timerCounter.value,
+        startStopTimer,
+        resetTimer,
+        isOn: timerCounter.isOn,
+    };
 };

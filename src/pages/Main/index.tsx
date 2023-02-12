@@ -9,18 +9,14 @@ export const gameStyle: CSSProperties = {
 };
 
 export const Main: FC = () => {
-    const { counter, startStopTimer, resetTimer } = useTimer();
+    const { counter, startStopTimer, resetTimer, isOn } = useTimer();
 
     return (
         <>
             <Header />
             <div className="game" style={gameStyle}>
                 <GameHeader>
-                    <Timer
-                        counter={counter}
-                        startStopTimer={startStopTimer}
-                        resetTimer={resetTimer}
-                    />
+                    <Timer {...{ counter, startStopTimer, resetTimer, isOn }} />
                 </GameHeader>
             </div>
             <Footer />
