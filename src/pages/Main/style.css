@@ -117,15 +117,6 @@ div#play-btn:hover {
     cursor: pointer;
 }
 
-p#solve-time {
-    font-weight: bold;
-    margin: 0.5rem 0 0 0;
-}
-
-div#congrats-newgame button:hover {
-    cursor: pointer;
-}
-
 tr.game-row {
     flex: 1;
     display: flex;

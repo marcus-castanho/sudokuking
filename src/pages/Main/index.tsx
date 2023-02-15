@@ -1,18 +1,12 @@
 import React, { FC } from 'react';
-import { Footer, GameHeader, Header, Timer } from '../../components';
+import { Footer, GameHeader, GameTable, Header, Timer } from '../../components';
 import { useTimer } from '../../components/Timer/hooks';
-import { format } from 'date-fns';
 import {
-    congratulationButtonStyle,
-    congratulationContainerStyle,
-    congratulationStyle,
     controllerTableStyle,
-    endGameStyle,
     gameBoardStyle,
     gameControllerStyle,
     gameDisplayStyle,
     gameStyle,
-    gameTableContainerStyle,
 } from './style';
 
 export const Main: FC = () => {
@@ -29,40 +23,7 @@ export const Main: FC = () => {
                 </GameHeader>
                 <div id="game-display" style={gameDisplayStyle}>
                     <div id="game-board" style={gameBoardStyle}>
-                        <div
-                            id="game-table-container"
-                            style={gameTableContainerStyle}
-                        >
-                            <div id="endgame" style={endGameStyle}>
-                                <div
-                                    id="container-congrats-newgame"
-                                    style={congratulationContainerStyle}
-                                >
-                                    <div
-                                        id="congrats-newgame"
-                                        style={congratulationStyle}
-                                    >
-                                        <p>Congratulations!</p>
-                                        <p id="solve-time">
-                                            {format(counterDisplay, 'HH:mm:ss')}
-                                        </p>
-                                        <div id="start-newgame-btn">
-                                            <button
-                                                style={
-                                                    congratulationButtonStyle
-                                                }
-                                                onClick={() => {
-                                                    console.log('newgame');
-                                                    // this.newgame('easy');
-                                                }}
-                                            >
-                                                START NEW GAME
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <GameTable counterDisplay={counterDisplay} />
                     </div>
                     <div id="game-controller" style={gameControllerStyle}>
                         <table
