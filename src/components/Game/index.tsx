@@ -24,7 +24,10 @@ export const Game: FC = () => {
             </GameHeader>
             <div id="game-display" style={gameDisplayStyle}>
                 <div id="game-board" style={gameBoardStyle}>
-                    <GameTable counterDisplay={counterDisplay} />
+                    <GameTable
+                        counterDisplay={counterDisplay}
+                        startStopTimer={startStopTimer}
+                    />
                 </div>
                 <div id="game-controller" style={gameControllerStyle}>
                     <table id="controller-table" style={controllerTableStyle}>
