@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import {
+    buttonNewGameStyle,
     checkButtonStyle,
     gameHeaderStyle,
     gameInfoStyle,
@@ -28,9 +29,10 @@ export const GameHeader: FC<GameHeaderProps> = ({ children }) => {
                 >
                     Check game
                 </button>
-                <div id="select-newgame">
+                <div id="select-newgame" style={{ color: '#000' }}>
                     <button
                         id="btn-newgame"
+                        style={buttonNewGameStyle}
                         onClick={
                             () => console.log('handleButtonClick')
                             // this.handleButtonClick('newgameOpt')
