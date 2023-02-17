@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { gameTableContainerStyle } from './style';
-import { EndGame, HiddenGame } from './components';
+import { EndGame, HiddenGame, SelecNewGameMessage } from './components';
+import { match } from 'ts-pattern';
 
 export type GameTableProps = {
     counterDisplay: number;
@@ -11,20 +12,31 @@ export const GameTable: FC<GameTableProps> = ({
     counterDisplay,
     startStopTimer,
 }) => {
-    const [gameHasEnded, setGameHasEnded] = useState(false);
+    const [gameState, steGameState] = useState<
+        'on' | 'paused' | 'ended' | 'selectNewGame'
+    >('on');
 
     //remover apos implementar jogo
     useEffect(() => {
-        setGameHasEnded(true);
+        steGameState('ended');
     }, []);
 
     return (
-        <div id="game-table-container" style={gameTableContainerStyle}>
-            {gameHasEnded ? (
-                <EndGame counterDisplay={counterDisplay} />
-            ) : (
-                <HiddenGame startStopTimer={startStopTimer} />
-            )}
-        </div>
+        <>
+            <div id="game-table-container" style={gameTableContainerStyle}>
+                {match(gameState)
+                    .with('on', () => <p>GameTable</p>)
+                    .with('paused', () => (
+                        <HiddenGame startStopTimer={startStopTimer} />
+                    ))
+                    .with('ended', () => (
+                        <EndGame counterDisplay={counterDisplay} />
+                    ))
+                    .with('selectNewGame', () => <SelecNewGameMessage />)
+                    .otherwise(() => (
+                        <></>
+                    ))}
+            </div>
+        </>
     );
 };
