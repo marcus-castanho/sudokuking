@@ -64,41 +64,6 @@ div#game-board {
     padding-top: 0;
 }
 
-table#game-table {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-table#game-table tbody {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    position: relative;
-    z-index: 0;
-}
-
-div#game-table-hidden {
-    border: 2px solid #000;
-    z-index: 1;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    display: none;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
 div#play-btn {
     z-index: 3;
     position: absolute;
@@ -117,37 +82,6 @@ div#play-btn:hover {
     cursor: pointer;
 }
 
-tr.game-row {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-}
-
-td.game-cell {
-    border: 1px solid black;
-    flex: 1;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-td.row2 {
-    border-bottom: 2px solid #000;
-}
-
-td.row5 {
-    border-bottom: 2px solid #000;
-}
-
-td.col2 {
-    border-right: 2px solid #000;
-}
-
-td.col5 {
-    border-right: 2px solid #000;
-}
-
 @keyframes check {
     from {
         background-color: rgba(255, 0, 0, 0.5);
@@ -157,11 +91,6 @@ td.col5 {
         background-color: #fff;
         color: #000;
     }
-}
-
-td.game-cell:hover {
-    background-color: rgba(110, 110, 110, 0.5);
-    cursor: pointer;
 }
 
 table#controller-table tbody {

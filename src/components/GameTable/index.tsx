@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { gameTableContainerStyle } from './style';
-import { EndGame, HiddenGame, SelecNewGameMessage } from './components';
+import { EndGame, HiddenGame, SelecNewGameMessage, Table } from './components';
 import { match } from 'ts-pattern';
 
 export type GameTableProps = {
@@ -18,14 +18,14 @@ export const GameTable: FC<GameTableProps> = ({
 
     //remover apos implementar jogo
     useEffect(() => {
-        steGameState('ended');
+        steGameState('on');
     }, []);
 
     return (
         <>
             <div id="game-table-container" style={gameTableContainerStyle}>
                 {match(gameState)
-                    .with('on', () => <p>GameTable</p>)
+                    .with('on', () => <Table />)
                     .with('paused', () => (
                         <HiddenGame startStopTimer={startStopTimer} />
                     ))

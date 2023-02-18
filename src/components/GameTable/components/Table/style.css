@@ -1,0 +1,20 @@
+td.game-cell:hover {
+    background-color: rgba(110, 110, 110, 0.5);
+    cursor: pointer;
+}
+
+td.row2 {
+    border-bottom: 2px solid #000;
+}
+
+td.row5 {
+    border-bottom: 2px solid #000;
+}
+
+td.col2 {
+    border-right: 2px solid #000;
+}
+
+td.col5 {
+    border-right: 2px solid #000;
+}
