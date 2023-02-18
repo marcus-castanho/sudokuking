@@ -1,9 +1,11 @@
 import React, { FC, useRef } from 'react';
 import {
+    buttonNewGameStyle,
     selectNewGameDropdownStyle,
     selectNewGameItem,
     selectNewGameStyle,
 } from './style';
+import './style.css';
 
 export const SelecNewGameMessage: FC = () => {
     const newGameDropDownRef = useRef(null);
@@ -24,6 +26,7 @@ export const SelecNewGameMessage: FC = () => {
                             console.log('newgame');
                             // this.newgame();
                         }}
+                        style={buttonNewGameStyle}
                     >
                         Yes
                     </button>
@@ -32,6 +35,7 @@ export const SelecNewGameMessage: FC = () => {
                             console.log('handleButtonClick');
                             // this.handleButtonClick('resumegameOpt')
                         }}
+                        style={buttonNewGameStyle}
                     >
                         No
                     </button>

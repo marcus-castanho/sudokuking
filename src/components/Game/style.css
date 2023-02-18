@@ -10,67 +10,6 @@
     }
 }
 
-div#selec-newgame-dropdown {
-    display: block;
-    border: 1px solid rgba(110, 110, 110, 0.5);
-    position: absolute;
-    background-color: #fff;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 2px;
-    z-index: 3;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-div.selec-newgame-item {
-    list-style-type: none;
-    text-align: center;
-    padding: 5px;
-}
-
-div.selec-newgame {
-    border: none;
-    width: 100%;
-    padding-bottom: 5px;
-    background-color: #fff;
-}
-
-#restart-game-opt button {
-    background-color: white;
-    border: 1px solid rgba(110, 110, 110, 0.5);
-    padding: 5px;
-    width: 35%;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-#restart-game-opt button:hover {
-    cursor: pointer;
-    background-color: rgba(110, 110, 110, 1);
-    color: #fff;
-}
-
-div#play-btn {
-    z-index: 3;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    height: 10%;
-}
-
-div#play-btn img {
-    height: 100%;
-}
-
-div#play-btn:hover {
-    cursor: pointer;
-}
-
 @keyframes check {
     from {
         background-color: rgba(255, 0, 0, 0.5);
