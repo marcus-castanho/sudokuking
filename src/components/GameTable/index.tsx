@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { gameTableContainerStyle } from './style';
+import { gameBoardStyle, gameTableContainerStyle } from './style';
 import { EndGame, HiddenGame, SelecNewGameMessage, Table } from './components';
 import { match } from 'ts-pattern';
 
@@ -22,7 +22,7 @@ export const GameTable: FC<GameTableProps> = ({
     }, []);
 
     return (
-        <>
+        <div id="game-board" style={gameBoardStyle}>
             <div id="game-table-container" style={gameTableContainerStyle}>
                 {match(gameState)
                     .with('on', () => <Table />)
@@ -37,6 +37,6 @@ export const GameTable: FC<GameTableProps> = ({
                         <></>
                     ))}
             </div>
-        </>
+        </div>
     );
 };

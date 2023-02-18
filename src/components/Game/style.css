@@ -53,17 +53,6 @@ div.selec-newgame {
     color: #fff;
 }
 
-div#game-board {
-    margin: 5px auto 10px;
-    flex: 1;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding-top: 0;
-}
-
 div#play-btn {
     z-index: 3;
     position: absolute;

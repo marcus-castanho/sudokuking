@@ -4,7 +4,7 @@ import { GameHeader } from '../GameHeader';
 import { GameTable } from '../GameTable';
 import { Timer } from '../Timer';
 import { useTimer } from '../Timer/hooks';
-import { gameBoardStyle, gameDisplayStyle, gameStyle } from './style';
+import { gameDisplayStyle, gameStyle } from './style';
 import './style.css';
 
 export const Game: FC = () => {
@@ -18,12 +18,10 @@ export const Game: FC = () => {
                 <Timer {...{ counter, startStopTimer, resetTimer, isOn }} />
             </GameHeader>
             <div id="game-display" style={gameDisplayStyle}>
-                <div id="game-board" style={gameBoardStyle}>
-                    <GameTable
-                        counterDisplay={counterDisplay}
-                        startStopTimer={startStopTimer}
-                    />
-                </div>
+                <GameTable
+                    counterDisplay={counterDisplay}
+                    startStopTimer={startStopTimer}
+                />
                 <GameController />
             </div>
         </div>

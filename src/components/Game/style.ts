@@ -15,14 +15,3 @@ export const gameDisplayStyle: CSSProperties = {
     justifyContent: 'center',
     position: 'relative',
 };
-
-export const gameBoardStyle: CSSProperties = {
-    margin: ' 5px auto 10px',
-    flex: 1,
-    width: '100%',
-    maxWidth: '500px',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    paddingTop: 0,
-};
