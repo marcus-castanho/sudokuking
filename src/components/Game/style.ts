@@ -26,20 +26,3 @@ export const gameBoardStyle: CSSProperties = {
     position: 'relative',
     paddingTop: 0,
 };
-
-export const gameControllerStyle: CSSProperties = {
-    width: '100%',
-    height: '45px',
-    maxWidth: '500px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'row',
-};
-
-export const controllerTableStyle: CSSProperties = {
-    width: '100%',
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-};

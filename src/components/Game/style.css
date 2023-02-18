@@ -93,42 +93,6 @@ div#play-btn:hover {
     }
 }
 
-table#controller-table tbody {
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-tr#controller-row {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-}
-
-td.controller-cell {
-    border: 1px solid black;
-    flex: 1;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#erase-btn img {
-    width: 30px;
-}
-
-td.controller-cell:hover {
-    background-color: rgba(110, 110, 110, 0.5);
-    cursor: pointer;
-}
-
-.arrow-icon {
-    width: 30px;
-}
-
 div#text-page {
     border-top: 1px solid rgba(110, 110, 110, 0.5);
     flex: 1;
