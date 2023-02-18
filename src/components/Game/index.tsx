@@ -21,6 +21,7 @@ export const Game: FC = () => {
                 <GameBoard
                     counterDisplay={counterDisplay}
                     startStopTimer={startStopTimer}
+                    timerIsOn={isOn}
                 />
                 <GameController />
             </div>
