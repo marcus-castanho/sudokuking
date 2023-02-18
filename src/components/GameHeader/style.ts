@@ -14,12 +14,3 @@ export const gameHeaderStyle: CSSProperties = {
     justifyContent: 'space-between',
     alignItems: 'center',
 };
-
-export const gameInfoStyle: CSSProperties = {
-    border: '1px solid black',
-    borderRadius: '5px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '0.2rem',
-    marginBottom: '1px',
-};
