@@ -3,12 +3,12 @@ import { gameBoardStyle, gameTableContainerStyle } from './style';
 import { EndGame, HiddenGame, SelecNewGameMessage, Table } from './components';
 import { match } from 'ts-pattern';
 
-export type GameTableProps = {
+export type GameBoardProps = {
     counterDisplay: number;
     startStopTimer: () => void;
 };
 
-export const GameTable: FC<GameTableProps> = ({
+export const GameBoard: FC<GameBoardProps> = ({
     counterDisplay,
     startStopTimer,
 }) => {

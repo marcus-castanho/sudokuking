@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { GameController } from '../GameController';
 import { GameHeader } from '../GameHeader';
-import { GameTable } from '../GameTable';
+import { GameBoard } from '../GameBoard';
 import { Timer } from '../Timer';
 import { useTimer } from '../Timer/hooks';
 import { gameDisplayStyle, gameStyle } from './style';
@@ -18,7 +18,7 @@ export const Game: FC = () => {
                 <Timer {...{ counter, startStopTimer, resetTimer, isOn }} />
             </GameHeader>
             <div id="game-display" style={gameDisplayStyle}>
-                <GameTable
+                <GameBoard
                     counterDisplay={counterDisplay}
                     startStopTimer={startStopTimer}
                 />
