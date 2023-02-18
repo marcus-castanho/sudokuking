@@ -10,7 +10,7 @@ export type HiddenGameProps = {
 export const HiddenGame: FC<HiddenGameProps> = ({ handleUnpauseGame }) => {
     return (
         <>
-            <div id="game-table-hidden" style={hiddenGameStyle} />;
+            <div id="game-table-hidden" style={hiddenGameStyle} />
             <div
                 id="play-btn"
                 style={playButtonStyle}
