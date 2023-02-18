@@ -23,21 +23,3 @@ export const gameInfoStyle: CSSProperties = {
     padding: '0.2rem',
     marginBottom: '1px',
 };
-
-export const checkButtonStyle: CSSProperties = {
-    backgroundColor: 'white',
-    border: '1px solid rgba(110,110,110,0.5)',
-    padding: '5px',
-    textDecoration: 'none',
-    borderRadius: '5px',
-    fontSize: '16px',
-};
-
-export const buttonNewGameStyle: CSSProperties = {
-    backgroundColor: 'white',
-    border: '1px solid rgba(110, 110, 110, 0.5)',
-    padding: '5px',
-    textDecoration: 'none',
-    borderRadius: '5px',
-    fontSize: '16px',
-};

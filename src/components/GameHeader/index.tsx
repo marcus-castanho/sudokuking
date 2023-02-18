@@ -1,12 +1,6 @@
 import React, { FC, ReactNode } from 'react';
-import {
-    buttonNewGameStyle,
-    checkButtonStyle,
-    gameHeaderStyle,
-    gameInfoStyle,
-    gamePageStyle,
-} from './style';
-import './style.css';
+import { CheckGameButton, SelectNewGameButton } from './components';
+import { gameHeaderStyle, gameInfoStyle, gamePageStyle } from './style';
 
 export type GameHeaderProps = {
     children: ReactNode;
@@ -19,28 +13,8 @@ export const GameHeader: FC<GameHeaderProps> = ({ children }) => {
                 <div id="game-info" style={gameInfoStyle}>
                     {children}
                 </div>
-                <button
-                    id="check-btn"
-                    style={checkButtonStyle}
-                    onClick={
-                        () => console.log('checkEntries')
-                        // this.checkEntries()
-                    }
-                >
-                    Check game
-                </button>
-                <div id="select-newgame" style={{ color: '#000' }}>
-                    <button
-                        id="btn-newgame"
-                        style={buttonNewGameStyle}
-                        onClick={
-                            () => console.log('handleButtonClick')
-                            // this.handleButtonClick('newgameOpt')
-                        }
-                    >
-                        New Game
-                    </button>
-                </div>
+                <CheckGameButton />
+                <SelectNewGameButton />
             </div>
         </div>
     );
