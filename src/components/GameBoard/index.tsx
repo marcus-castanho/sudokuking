@@ -2,17 +2,24 @@ import React, { FC, useEffect, useState } from 'react';
 import { gameBoardStyle, gameTableContainerStyle } from './style';
 import { EndGame, HiddenGame, SelecNewGameMessage, Table } from './components';
 import { match } from 'ts-pattern';
+import type { GameHook } from '../Game/hooks';
 
 export type GameBoardProps = {
     counterDisplay: number;
     startStopTimer: () => void;
     timerIsOn: boolean;
+    puzzle: ReturnType<GameHook>['puzzle'];
+    changeCell: ReturnType<GameHook>['changeCell'];
+    checkGame: ReturnType<GameHook>['checkGame'];
 };
 
 export const GameBoard: FC<GameBoardProps> = ({
     counterDisplay,
     startStopTimer,
     timerIsOn,
+    puzzle,
+    changeCell,
+    checkGame,
 }) => {
     const [gameState, setGameState] = useState<
         'on' | 'paused' | 'ended' | 'selectNewGame'
@@ -32,7 +39,6 @@ export const GameBoard: FC<GameBoardProps> = ({
             });
     }, [timerIsOn]);
 
-    //remover apos implementar jogo
     useEffect(() => {
         setGameState('on');
     }, []);
@@ -41,7 +47,7 @@ export const GameBoard: FC<GameBoardProps> = ({
         <div id="game-board" style={gameBoardStyle}>
             <div id="game-table-container" style={gameTableContainerStyle}>
                 {match(gameState)
-                    .with('on', () => <Table />)
+                    .with('on', () => <Table puzzle={puzzle} />)
                     .with('paused', () => (
                         <HiddenGame handleUnpauseGame={handleUnpauseGame} />
                     ))

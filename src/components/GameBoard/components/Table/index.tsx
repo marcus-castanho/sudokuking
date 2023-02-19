@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { GameHook } from '../../../Game/hooks';
 import {
     gameCellStyle,
     gameRowStyle,
@@ -7,20 +8,18 @@ import {
 } from './style';
 import './style.css';
 
-export const Table: FC = () => {
-    const [gameTable, setGameTable] = useState(() =>
-        Array(9)
-            .fill(0)
-            .map(() => Array(9).fill(0)),
-    );
+export type TableProps = {
+    puzzle: ReturnType<GameHook>['puzzle'];
+};
 
+export const Table: FC<TableProps> = ({ puzzle }) => {
     return (
         <table id="game-table" style={gameTableStyle}>
             <tbody style={gameTableBodyStyle}>
-                {gameTable.map((row, rowIndex) => (
+                {puzzle.map((row, rowIndex) => (
                     <tr
                         className="game-row"
-                        key={gameTable.indexOf(row)}
+                        key={rowIndex}
                         style={gameRowStyle}
                     >
                         {row.map((cell, columnIndex) => (
