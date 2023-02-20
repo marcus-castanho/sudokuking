@@ -21,3 +21,12 @@ export const convert2DIndexTo1DIndex = (
 ) => {
     return parseInt(`${rowIndex}${columnIndex}`) - rowIndex;
 };
+
+export const getImmutableIndexes = (puzzle: string) => {
+    const indexes = puzzle
+        .split('')
+        .map((value, index) => (value === '.' ? -1 : index))
+        .filter((element) => element !== -1);
+
+    return indexes;
+};

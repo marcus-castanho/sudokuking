@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import sudoku from 'sudoku-umd';
 import { GameInputValue, NumericRange } from '../../../../@types';
-import { convert1DIndexTo2DIndex, convert2DIndexTo1DIndex } from './utils';
+import {
+    convert1DIndexTo2DIndex,
+    convert2DIndexTo1DIndex,
+    getImmutableIndexes,
+} from './utils';
 
 export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
     puzzle: string[][];
@@ -16,6 +20,7 @@ export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
     }) => void;
     checkGame: () => void;
     wrongCells: { rowIndex: number; columnIndex: number }[];
+    generateNewGame: (newDifficulty?: 'easy' | 'medium' | 'hard') => void;
 };
 
 export const useGame: GameHook = (difficulty = 'easy') => {
@@ -24,14 +29,9 @@ export const useGame: GameHook = (difficulty = 'easy') => {
     const [solvedPuzzle, setSolvedPuzzle] = useState<string>(
         sudoku.solve(newPuzzle),
     );
-    const [immutableIndexes] = useState<number[]>(() => {
-        const indexes = puzzle
-            .split('')
-            .map((value, index) => (value === '.' ? -1 : index))
-            .filter((element) => element !== -1);
-
-        return indexes;
-    });
+    const [immutableIndexes, setImmutableIndexes] = useState<number[]>(() =>
+        getImmutableIndexes(puzzle),
+    );
     const [wrongCells, setWrongCells] = useState<
         { rowIndex: number; columnIndex: number }[]
     >([]);
@@ -84,10 +84,22 @@ export const useGame: GameHook = (difficulty = 'easy') => {
         setWrongCells([...newWrongCells]);
     };
 
+    const generateNewGame: ReturnType<GameHook>['generateNewGame'] = (
+        newDifficulty = 'easy',
+    ) => {
+        const newPuzzle = sudoku.generate(newDifficulty);
+
+        setPuzzle(newPuzzle);
+        setSolvedPuzzle(sudoku.solve(newPuzzle));
+        setImmutableIndexes(() => getImmutableIndexes(newPuzzle));
+        setWrongCells([]);
+    };
+
     return {
         puzzle: puzzleAsGrid,
         changeCell,
         checkGame,
         wrongCells,
+        generateNewGame,
     };
 };
