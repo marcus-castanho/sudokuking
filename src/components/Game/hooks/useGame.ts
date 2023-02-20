@@ -1,14 +1,18 @@
 import { useCallback, useState } from 'react';
 import sudoku from 'sudoku-umd';
-import { NumericRange } from '../../../@types';
+import { GameInputValue, NumericRange } from '../../../@types';
 
 export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
     puzzle: string[][];
-    changeCell: (
-        value: '1' | '2' | '3' | '4' | '5' | '6' | '8' | '9' | ' ',
-        row: NumericRange<0, 8>,
-        column: NumericRange<0, 8>,
-    ) => void;
+    changeCell: ({
+        value,
+        rowIndex,
+        columnIndex,
+    }: {
+        value: GameInputValue;
+        rowIndex: NumericRange<0, 8>;
+        columnIndex: NumericRange<0, 8>;
+    }) => void;
     checkGame: () => {
         row: number;
         column: number;
@@ -16,10 +20,19 @@ export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
 };
 
 export const useGame: GameHook = (difficulty = 'easy') => {
-    const [puzzle, setPuzzle] = useState<string>(sudoku.generate(difficulty));
+    const newPuzzle = sudoku.generate(difficulty);
+    const [puzzle, setPuzzle] = useState<string>(newPuzzle);
     const [solvedPuzzle, setSolvedPuzzle] = useState<string>(
-        sudoku.solve(puzzle),
+        sudoku.solve(newPuzzle),
     );
+    const [immutableIndexes] = useState<number[]>(() => {
+        const indexes = puzzle
+            .split('')
+            .map((value, index) => (value === '.' ? -1 : index))
+            .filter((element) => element !== -1);
+
+        return indexes;
+    });
     const puzzleAsGrid: string[][] = sudoku.board_string_to_grid(
         puzzle.replaceAll('.', ' '),
     );
@@ -45,21 +58,28 @@ export const useGame: GameHook = (difficulty = 'easy') => {
         [],
     );
 
-    const changeCell = (
-        value: '1' | '2' | '3' | '4' | '5' | '6' | '8' | '9' | ' ',
-        rowIndex: NumericRange<0, 8>,
-        columnIndex: NumericRange<0, 8>,
-    ) => {
+    const changeCell = ({
+        value,
+        rowIndex,
+        columnIndex,
+    }: {
+        value: GameInputValue;
+        rowIndex: NumericRange<0, 8>;
+        columnIndex: NumericRange<0, 8>;
+    }) => {
         const newValue = value === ' ' ? '.' : value;
         const indexToReplace = convert2DIndexTo1DIndex(rowIndex, columnIndex);
+
+        if (immutableIndexes.includes(indexToReplace)) return;
+
         const newPuzzleState =
             puzzle.slice(0, indexToReplace) +
             newValue +
-            puzzle.slice(indexToReplace);
+            puzzle.slice(indexToReplace + 1);
 
         setPuzzle(newPuzzleState);
 
-        const newSolvedPuzzle = sudoku.solve(newPuzzleState);
+        const newSolvedPuzzle = sudoku.solve(puzzle);
 
         if (newSolvedPuzzle) {
             setSolvedPuzzle(newSolvedPuzzle);

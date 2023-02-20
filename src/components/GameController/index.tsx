@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useState } from 'react';
 import {
     controllerCellStyle,
     controllerRowStyle,
@@ -7,40 +7,70 @@ import {
 } from './style';
 import eraserIcon from '../../assets/images/eraserIcon.png';
 import './style.css';
+import { GameHook } from '../Game/hooks';
+import { GameInputValue, SelectedCell } from '../../@types';
 
-export const GameController = () => {
-    const keyboardNumbers = [...Array(9).keys()].map((number, index) => ({
-        value: number + 1,
-        id: index,
-    }));
+export type GameControllerProps = {
+    changeCell: ReturnType<GameHook>['changeCell'];
+    selectedCell?: SelectedCell;
+};
+
+export const GameController: FC<GameControllerProps> = ({
+    changeCell,
+    selectedCell,
+}) => {
+    const [inputEntries, setInputEntries] = useState<
+        Parameters<typeof changeCell>[number][]
+    >([]);
+    const keyboardNumbers = [...Array(9).keys()].map(
+        (number) => `${number + 1}`,
+    );
+
+    const handleChangeCell = (value: GameInputValue) => {
+        if (!selectedCell) return;
+
+        const { rowIndex, columnIndex } = selectedCell;
+
+        setInputEntries((state) => {
+            return [...state, { value, rowIndex, columnIndex }];
+        });
+        changeCell({ value, rowIndex, columnIndex });
+    };
+
+    const handleGoBack = () => {
+        if (inputEntries.length === 0) return;
+
+        const lastInput = inputEntries[inputEntries.length - 1];
+        const { rowIndex, columnIndex } = lastInput;
+
+        setInputEntries((state) => {
+            const newState = [...state];
+            newState.pop();
+            return [...newState];
+        });
+        changeCell({ value: ' ', rowIndex, columnIndex });
+    };
 
     return (
         <div id="game-controller" style={gameControllerStyle}>
             <table id="controller-table" style={controllerTableStyle}>
                 <tbody>
                     <tr id="controller-row" style={controllerRowStyle}>
-                        {keyboardNumbers.map((btnNum) => (
+                        {keyboardNumbers.map((btnNum, index) => (
                             <td
                                 className="controller-cell"
                                 onClick={() => {
-                                    console.log('fillEraseElements');
-                                    // this.fillEraseElements(
-                                    //     btnNum.id + 1,
-                                    //     selectedCell,
-                                    // );
+                                    handleChangeCell(btnNum as GameInputValue);
                                 }}
-                                key={'' + btnNum.id}
+                                key={index}
                                 style={controllerCellStyle}
                             >
-                                {btnNum.value}
+                                {btnNum}
                             </td>
                         ))}
                         <td
                             className="controller-cell"
-                            onClick={() => {
-                                console.log('fillEraseElements');
-                                // this.fillEraseElements('erase', selectedCell);
-                            }}
+                            onClick={() => handleChangeCell(' ')}
                             id="erase-btn"
                             style={controllerCellStyle}
                         >
@@ -52,10 +82,7 @@ export const GameController = () => {
                         </td>
                         <td
                             className="controller-cell"
-                            onClick={() => {
-                                console.log('undoEntries');
-                                // this.undoEntries()
-                            }}
+                            onClick={() => handleGoBack()}
                             id="undo-btn"
                             style={controllerCellStyle}
                         >
