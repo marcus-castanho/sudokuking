@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import sudoku from 'sudoku-umd';
-import { GameInputValue, NumericRange } from '../../../@types';
+import { GameInputValue, NumericRange } from '../../../../@types';
+import { convert1DIndexTo2DIndex, convert2DIndexTo1DIndex } from './utils';
 
 export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
     puzzle: string[][];
@@ -36,27 +37,6 @@ export const useGame: GameHook = (difficulty = 'easy') => {
     >([]);
     const puzzleAsGrid: string[][] = sudoku.board_string_to_grid(
         puzzle.replaceAll('.', ' '),
-    );
-
-    const convert1DIndexTo2DIndex = useCallback(
-        (index: NumericRange<0, 80>) => {
-            const pairIndexNum = index + parseInt(String(index / 9));
-            const isOneDigitNum = `${pairIndexNum}`.length === 1;
-            const rowIndex = isOneDigitNum ? 0 : parseInt(`${pairIndexNum}`[0]);
-            const columnIndex = isOneDigitNum
-                ? pairIndexNum
-                : parseInt(`${pairIndexNum}`[1]);
-
-            return [rowIndex, columnIndex];
-        },
-        [],
-    );
-
-    const convert2DIndexTo1DIndex = useCallback(
-        (rowIndex: number, columnIndex: number) => {
-            return parseInt(`${rowIndex}${columnIndex}`) - rowIndex;
-        },
-        [],
     );
 
     const changeCell = ({
@@ -95,7 +75,7 @@ export const useGame: GameHook = (difficulty = 'easy') => {
 
             if (value !== rightValue && value !== '.') {
                 const [rowIndex, columnIndex] = convert1DIndexTo2DIndex(
-                    index as NumericRange<0, 8>,
+                    index as NumericRange<0, 80>,
                 );
                 newWrongCells.push({ rowIndex, columnIndex });
             }
