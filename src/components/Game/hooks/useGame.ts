@@ -13,10 +13,8 @@ export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
         rowIndex: NumericRange<0, 8>;
         columnIndex: NumericRange<0, 8>;
     }) => void;
-    checkGame: () => {
-        row: number;
-        column: number;
-    }[];
+    checkGame: () => void;
+    wrongCells: { rowIndex: number; columnIndex: number }[];
 };
 
 export const useGame: GameHook = (difficulty = 'easy') => {
@@ -33,6 +31,9 @@ export const useGame: GameHook = (difficulty = 'easy') => {
 
         return indexes;
     });
+    const [wrongCells, setWrongCells] = useState<
+        { rowIndex: number; columnIndex: number }[]
+    >([]);
     const puzzleAsGrid: string[][] = sudoku.board_string_to_grid(
         puzzle.replaceAll('.', ' '),
     );
@@ -87,7 +88,7 @@ export const useGame: GameHook = (difficulty = 'easy') => {
     };
 
     const checkGame = () => {
-        const wrongCells: { row: number; column: number }[] = [];
+        const newWrongCells: { rowIndex: number; columnIndex: number }[] = [];
 
         puzzle.split('').forEach((value, index) => {
             const rightValue = solvedPuzzle[index];
@@ -96,16 +97,17 @@ export const useGame: GameHook = (difficulty = 'easy') => {
                 const [rowIndex, columnIndex] = convert1DIndexTo2DIndex(
                     index as NumericRange<0, 8>,
                 );
-                wrongCells.push({ row: rowIndex, column: columnIndex });
+                newWrongCells.push({ rowIndex, columnIndex });
             }
         });
 
-        return wrongCells;
+        setWrongCells([...newWrongCells]);
     };
 
     return {
         puzzle: puzzleAsGrid,
         changeCell,
         checkGame,
+        wrongCells,
     };
 };

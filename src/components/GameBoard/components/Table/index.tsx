@@ -12,9 +12,14 @@ import './style.css';
 export type TableProps = {
     puzzle: ReturnType<GameHook>['puzzle'];
     handleSelectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
+    wrongCells: ReturnType<GameHook>['wrongCells'];
 };
 
-export const Table: FC<TableProps> = ({ puzzle, handleSelectCell }) => {
+export const Table: FC<TableProps> = ({
+    puzzle,
+    handleSelectCell,
+    wrongCells,
+}) => {
     return (
         <table id="game-table" style={gameTableStyle}>
             <tbody style={gameTableBodyStyle}>
@@ -23,6 +28,16 @@ export const Table: FC<TableProps> = ({ puzzle, handleSelectCell }) => {
                         {row.map((cell, cIndex) => {
                             const rowIndex = rIndex as NumericRange<0, 8>;
                             const columnIndex = cIndex as NumericRange<0, 8>;
+
+                            const style = wrongCells.some((coordinates) => {
+                                return (
+                                    coordinates.rowIndex === rowIndex &&
+                                    coordinates.columnIndex === columnIndex
+                                );
+                            })
+                                ? { ...gameCellStyle, color: 'red' }
+                                : gameCellStyle;
+
                             return (
                                 <td
                                     className={`game-cell ${'row' + rIndex} ${
@@ -35,7 +50,7 @@ export const Table: FC<TableProps> = ({ puzzle, handleSelectCell }) => {
                                         });
                                     }}
                                     key={`${'row' + rIndex}-${'col' + cIndex}`}
-                                    style={gameCellStyle}
+                                    style={style}
                                 >
                                     {cell}
                                 </td>

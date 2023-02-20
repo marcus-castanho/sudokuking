@@ -18,3 +18,14 @@ td.col2 {
 td.col5 {
     border-right: 2px solid #000;
 }
+
+@keyframes check {
+    from {
+        background-color: rgba(255, 0, 0, 0.5);
+        color: rgba(255, 0, 0, 1);
+    }
+    to {
+        background-color: #fff;
+        color: #000;
+    }
+}

@@ -14,7 +14,7 @@ export const Game: FC = () => {
     const { counter, startStopTimer, resetTimer, isOn } = useTimer();
     const counterDisplay =
         counter === 0 ? new Date().setHours(0, 0, 0) : counter;
-    const { puzzle, checkGame, changeCell } = useGame();
+    const { puzzle, checkGame, changeCell, wrongCells } = useGame();
     const [selectedCell, setSelectedCell] = useState<SelectedCell>();
 
     const handleSelectCell = ({
@@ -41,6 +41,7 @@ export const Game: FC = () => {
                     timerIsOn={isOn}
                     puzzle={puzzle}
                     handleSelectCell={handleSelectCell}
+                    wrongCells={wrongCells}
                 />
                 <GameController
                     changeCell={changeCell}

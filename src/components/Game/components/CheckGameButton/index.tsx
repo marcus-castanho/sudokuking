@@ -12,9 +12,7 @@ export const CheckGameButton: FC<CheckGameButtonProps> = ({ checkGame }) => {
         <button
             id="check-btn"
             style={checkButtonStyle}
-            onClick={() => {
-                checkGame();
-            }}
+            onClick={() => checkGame()}
         >
             Check game
         </button>
