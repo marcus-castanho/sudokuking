@@ -17,7 +17,7 @@ export const Game: FC = () => {
     const { puzzle, checkGame, changeCell, wrongCells } = useGame();
     const [selectedCell, setSelectedCell] = useState<SelectedCell>();
 
-    const handleSelectCell = ({
+    const selectCell = ({
         rowIndex,
         columnIndex,
     }: NonNullable<typeof selectedCell>) => {
@@ -40,7 +40,7 @@ export const Game: FC = () => {
                     startStopTimer={startStopTimer}
                     timerIsOn={isOn}
                     puzzle={puzzle}
-                    handleSelectCell={handleSelectCell}
+                    selectCell={selectCell}
                     wrongCells={wrongCells}
                 />
                 <GameController

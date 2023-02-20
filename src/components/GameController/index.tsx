@@ -59,9 +59,9 @@ export const GameController: FC<GameControllerProps> = ({
                         {keyboardNumbers.map((btnNum, index) => (
                             <td
                                 className="controller-cell"
-                                onClick={() => {
-                                    handleChangeCell(btnNum as GameInputValue);
-                                }}
+                                onClick={() =>
+                                    handleChangeCell(btnNum as GameInputValue)
+                                }
                                 key={index}
                                 style={controllerCellStyle}
                             >

@@ -10,7 +10,7 @@ export type GameBoardProps = {
     startStopTimer: () => void;
     timerIsOn: boolean;
     puzzle: ReturnType<GameHook>['puzzle'];
-    handleSelectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
+    selectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
     wrongCells: ReturnType<GameHook>['wrongCells'];
 };
 
@@ -19,7 +19,7 @@ export const GameBoard: FC<GameBoardProps> = ({
     startStopTimer,
     timerIsOn,
     puzzle,
-    handleSelectCell,
+    selectCell,
     wrongCells,
 }) => {
     const [gameState, setGameState] = useState<
@@ -51,7 +51,7 @@ export const GameBoard: FC<GameBoardProps> = ({
                     .with('on', () => (
                         <Table
                             puzzle={puzzle}
-                            handleSelectCell={handleSelectCell}
+                            selectCell={selectCell}
                             wrongCells={wrongCells}
                         />
                     ))

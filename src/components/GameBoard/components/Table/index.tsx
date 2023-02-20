@@ -11,16 +11,13 @@ import './style.css';
 
 export type TableProps = {
     puzzle: ReturnType<GameHook>['puzzle'];
-    handleSelectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
+    selectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
     wrongCells: ReturnType<GameHook>['wrongCells'];
 };
 
-export const Table: FC<TableProps> = ({
-    puzzle,
-    handleSelectCell,
-    wrongCells,
-}) => {
+export const Table: FC<TableProps> = ({ puzzle, selectCell, wrongCells }) => {
     const [markWrongCells, setMarkWrongCells] = useState(false);
+    const [selectedCell, setSelectedCell] = useState<SelectedCell | null>(null);
 
     const markCell = (rowIndex: number, columnIndex: number) => {
         return (
@@ -32,6 +29,30 @@ export const Table: FC<TableProps> = ({
                 );
             })
         );
+    };
+
+    const handleSelectedCell = ({
+        rowIndex,
+        columnIndex,
+    }: {
+        rowIndex: NumericRange<0, 8>;
+        columnIndex: NumericRange<0, 8>;
+    }) => {
+        selectCell({
+            rowIndex,
+            columnIndex,
+        });
+        setSelectedCell((state) => {
+            const isSelectedCell =
+                state?.rowIndex === rowIndex &&
+                state.columnIndex === columnIndex;
+            return isSelectedCell
+                ? null
+                : {
+                      rowIndex,
+                      columnIndex,
+                  };
+        });
     };
 
     useEffect(() => {
@@ -47,20 +68,30 @@ export const Table: FC<TableProps> = ({
                             const rowIndex = rIndex as NumericRange<0, 8>;
                             const columnIndex = cIndex as NumericRange<0, 8>;
                             const isWrongCell = markCell(rowIndex, columnIndex);
+                            const isSelectedCell =
+                                selectedCell?.rowIndex === rowIndex &&
+                                selectedCell.columnIndex === columnIndex;
+                            const style = isSelectedCell
+                                ? {
+                                      ...gameCellStyle,
+                                      color: '#fff',
+                                      backgroundColor: 'rgba(110,110,110,0.2)',
+                                  }
+                                : gameCellStyle;
 
                             return (
                                 <td
                                     className={`game-cell ${'row' + rIndex} ${
                                         'col' + cIndex
                                     } ${isWrongCell ? 'wrongCell' : ''}`}
-                                    onClick={() => {
-                                        handleSelectCell({
+                                    onClick={() =>
+                                        handleSelectedCell({
                                             rowIndex,
                                             columnIndex,
-                                        });
-                                    }}
+                                        })
+                                    }
                                     key={`${'row' + rIndex}-${'col' + cIndex}`}
-                                    style={gameCellStyle}
+                                    style={style}
                                     onAnimationEnd={() =>
                                         setMarkWrongCells(false)
                                     }
