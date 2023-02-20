@@ -14,8 +14,10 @@ export const Game: FC = () => {
     const { counter, startStopTimer, resetTimer, isOn } = useTimer();
     const counterDisplay =
         counter === 0 ? new Date().setHours(0, 0, 0) : counter;
-    const { puzzle, checkGame, changeCell, wrongCells } = useGame();
+    const { puzzle, checkGame, changeCell, wrongCells, generateNewGame } =
+        useGame();
     const [selectedCell, setSelectedCell] = useState<SelectedCell>();
+    const [openNewGame, setOpenNewGame] = useState(false);
 
     const selectCell = ({
         rowIndex,
@@ -27,12 +29,39 @@ export const Game: FC = () => {
         });
     };
 
+    const openCloseNewGameMessage = () => {
+        startStopTimer();
+        setOpenNewGame((state) => !state);
+    };
+
+    const handleSelectNewGame = () => {
+        generateNewGame();
+        openCloseNewGameMessage();
+        resetTimer();
+    };
+
+    const handleStartStopTimer = () => {
+        if (openNewGame) return;
+        startStopTimer();
+    };
+
+    const handleResetTimer = () => {
+        if (openNewGame) return;
+        resetTimer();
+    };
+
     return (
         <div className="game" style={gameStyle}>
             <GameHeader>
-                <Timer {...{ counter, startStopTimer, resetTimer, isOn }} />
+                <Timer
+                    {...{ counter, isOn }}
+                    startStopTimer={handleStartStopTimer}
+                    resetTimer={handleResetTimer}
+                />
                 <CheckGameButton checkGame={checkGame} />
-                <SelectNewGameButton />
+                <SelectNewGameButton
+                    openNewGameMessage={openCloseNewGameMessage}
+                />
             </GameHeader>
             <div id="game-display" style={gameDisplayStyle}>
                 <GameBoard
@@ -42,6 +71,9 @@ export const Game: FC = () => {
                     puzzle={puzzle}
                     selectCell={selectCell}
                     wrongCells={wrongCells}
+                    openNewGame={openNewGame}
+                    openCloseNewGameMessage={openCloseNewGameMessage}
+                    handleSelectNewGame={handleSelectNewGame}
                 />
                 <GameController
                     changeCell={changeCell}

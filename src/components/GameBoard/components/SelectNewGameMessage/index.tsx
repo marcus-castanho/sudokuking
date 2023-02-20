@@ -7,7 +7,15 @@ import {
 } from './style';
 import './style.css';
 
-export const SelecNewGameMessage: FC = () => {
+export type SelecNewGameMessageProps = {
+    handleSelectNewGame: () => void;
+    openCloseNewGameMessage: () => void;
+};
+
+export const SelecNewGameMessage: FC<SelecNewGameMessageProps> = ({
+    handleSelectNewGame,
+    openCloseNewGameMessage,
+}) => {
     const newGameDropDownRef = useRef(null);
 
     return (
@@ -22,19 +30,13 @@ export const SelecNewGameMessage: FC = () => {
                 </div>
                 <div id="restart-game-opt">
                     <button
-                        onClick={() => {
-                            console.log('newgame');
-                            // this.newgame();
-                        }}
+                        onClick={handleSelectNewGame}
                         style={buttonNewGameStyle}
                     >
                         Yes
                     </button>
                     <button
-                        onClick={() => {
-                            console.log('handleButtonClick');
-                            // this.handleButtonClick('resumegameOpt')
-                        }}
+                        onClick={() => openCloseNewGameMessage()}
                         style={buttonNewGameStyle}
                     >
                         No

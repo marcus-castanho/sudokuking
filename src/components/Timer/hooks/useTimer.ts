@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** @function startStopTimer */
 /** @function resetTimer */
@@ -63,6 +63,10 @@ export const useTimer = () => {
             return { value: 0, startTime: 0, isOn: false };
         });
     };
+
+    useEffect(() => {
+        startStopTimer();
+    }, []);
 
     return {
         counter: timerCounter.value,

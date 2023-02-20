@@ -12,6 +12,9 @@ export type GameBoardProps = {
     puzzle: ReturnType<GameHook>['puzzle'];
     selectCell: ({ rowIndex, columnIndex }: SelectedCell) => void;
     wrongCells: ReturnType<GameHook>['wrongCells'];
+    openNewGame: boolean;
+    openCloseNewGameMessage: () => void;
+    handleSelectNewGame: () => void;
 };
 
 export const GameBoard: FC<GameBoardProps> = ({
@@ -21,6 +24,9 @@ export const GameBoard: FC<GameBoardProps> = ({
     puzzle,
     selectCell,
     wrongCells,
+    openNewGame,
+    openCloseNewGameMessage,
+    handleSelectNewGame,
 }) => {
     const [gameState, setGameState] = useState<
         'on' | 'paused' | 'ended' | 'selectNewGame'
@@ -33,8 +39,19 @@ export const GameBoard: FC<GameBoardProps> = ({
 
     useEffect(() => {
         match(timerIsOn)
-            .with(true, () => setGameState('on'))
-            .with(false, () => setGameState('paused'))
+            .with(true, () => {
+                if (openNewGame) {
+                    openCloseNewGameMessage;
+                }
+                setGameState('on');
+            })
+            .with(false, () => {
+                if (openNewGame) {
+                    setGameState('selectNewGame');
+                } else {
+                    setGameState('paused');
+                }
+            })
             .otherwise(() => {
                 return;
             });
@@ -61,7 +78,12 @@ export const GameBoard: FC<GameBoardProps> = ({
                     .with('ended', () => (
                         <EndGame counterDisplay={counterDisplay} />
                     ))
-                    .with('selectNewGame', () => <SelecNewGameMessage />)
+                    .with('selectNewGame', () => (
+                        <SelecNewGameMessage
+                            handleSelectNewGame={handleSelectNewGame}
+                            openCloseNewGameMessage={openCloseNewGameMessage}
+                        />
+                    ))
                     .otherwise(() => (
                         <></>
                     ))}
