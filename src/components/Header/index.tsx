@@ -42,26 +42,6 @@ export const Header: FC = () => (
                         }}
                     />
                 </a>
-                <div
-                    id="account-controller"
-                    style={{
-                        position: 'relative',
-                    }}
-                >
-                    <button
-                        id="btn-login-options"
-                        style={{
-                            padding: '5px',
-                            textDecoration: 'none',
-                            backgroundColor: 'white',
-                            border: '1px solid rgba(110,110,110,0.5)',
-                            borderRadius: '5px',
-                            fontSize: '16px',
-                        }}
-                    >
-                        Login
-                    </button>
-                </div>
             </div>
             <select
                 id="lang-select"
