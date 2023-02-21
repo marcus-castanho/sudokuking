@@ -1,0 +1,8 @@
+div#congrats-newgame button:hover {
+    cursor: pointer;
+}
+
+p#solve-time {
+    font-weight: bold;
+    margin: 0.5rem 0 0 0;
+}

@@ -1,0 +1,5 @@
+#restart-game-opt button:hover {
+    cursor: pointer;
+    background-color: rgba(110, 110, 110, 1);
+    color: #fff;
+}
