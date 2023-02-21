@@ -1,5 +1,0 @@
-[0716/011008.306:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acesso Negado} Um processo solicitou acesso a um objeto, mas o direito de acesso não lhe foi concedido. (0xc0000022)
-[0716/011008.479:ERROR:exception_snapshot_win.cc(98)] thread ID 22284 not found in process
-[0716/011008.541:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acesso Negado} Um processo solicitou acesso a um objeto, mas o direito de acesso não lhe foi concedido. (0xc0000022)
-[0716/011008.541:ERROR:exception_snapshot_win.cc(98)] thread ID 31368 not found in process
-[0121/000507.096:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\Marcus\AppData\Local\AVAST Software\Browser\User Data\Crashpad\attachments\928e2571-f20e-400a-a54a-b919ea556b05: O sistema não pode encontrar o caminho especificado. (0x3)
