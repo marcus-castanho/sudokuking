@@ -9,9 +9,13 @@ import { format } from 'date-fns';
 
 export type GameTableProps = {
     counterDisplay: number;
+    handleSelectNewGame: () => void;
 };
 
-export const EndGame: FC<GameTableProps> = ({ counterDisplay }) => {
+export const EndGame: FC<GameTableProps> = ({
+    counterDisplay,
+    handleSelectNewGame,
+}) => {
     return (
         <div id="endgame" style={endGameStyle}>
             <div
@@ -24,10 +28,7 @@ export const EndGame: FC<GameTableProps> = ({ counterDisplay }) => {
                     <div id="start-newgame-btn">
                         <button
                             style={congratulationButtonStyle}
-                            onClick={() => {
-                                console.log('newgame');
-                                // this.newgame('easy');
-                            }}
+                            onClick={() => handleSelectNewGame()}
                         >
                             START NEW GAME
                         </button>

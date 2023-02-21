@@ -15,6 +15,7 @@ export type GameBoardProps = {
     openNewGame: boolean;
     openCloseNewGameMessage: () => void;
     handleSelectNewGame: () => void;
+    endGame: boolean;
 };
 
 export const GameBoard: FC<GameBoardProps> = ({
@@ -27,6 +28,7 @@ export const GameBoard: FC<GameBoardProps> = ({
     openNewGame,
     openCloseNewGameMessage,
     handleSelectNewGame,
+    endGame,
 }) => {
     const [gameState, setGameState] = useState<
         'on' | 'paused' | 'ended' | 'selectNewGame'
@@ -41,11 +43,12 @@ export const GameBoard: FC<GameBoardProps> = ({
         match(timerIsOn)
             .with(true, () => {
                 if (openNewGame) {
-                    openCloseNewGameMessage;
+                    openCloseNewGameMessage();
                 }
                 setGameState('on');
             })
             .with(false, () => {
+                if (endGame) return;
                 if (openNewGame) {
                     setGameState('selectNewGame');
                 } else {
@@ -56,6 +59,13 @@ export const GameBoard: FC<GameBoardProps> = ({
                 return;
             });
     }, [timerIsOn]);
+
+    useEffect(() => {
+        if (endGame) {
+            startStopTimer();
+            setGameState('ended');
+        }
+    }, [endGame]);
 
     useEffect(() => {
         setGameState('on');
@@ -76,7 +86,10 @@ export const GameBoard: FC<GameBoardProps> = ({
                         <HiddenGame handleUnpauseGame={handleUnpauseGame} />
                     ))
                     .with('ended', () => (
-                        <EndGame counterDisplay={counterDisplay} />
+                        <EndGame
+                            counterDisplay={counterDisplay}
+                            handleSelectNewGame={handleSelectNewGame}
+                        />
                     ))
                     .with('selectNewGame', () => (
                         <SelecNewGameMessage

@@ -14,8 +14,14 @@ export const Game: FC = () => {
     const { counter, startStopTimer, resetTimer, isOn } = useTimer();
     const counterDisplay =
         counter === 0 ? new Date().setHours(0, 0, 0) : counter;
-    const { puzzle, checkGame, changeCell, wrongCells, generateNewGame } =
-        useGame();
+    const {
+        puzzle,
+        checkGame,
+        changeCell,
+        wrongCells,
+        generateNewGame,
+        endGame,
+    } = useGame();
     const [selectedCell, setSelectedCell] = useState<SelectedCell>();
     const [openNewGame, setOpenNewGame] = useState(false);
 
@@ -30,6 +36,7 @@ export const Game: FC = () => {
     };
 
     const openCloseNewGameMessage = () => {
+        if (!isOn && !openNewGame) return;
         startStopTimer();
         setOpenNewGame((state) => !state);
     };
@@ -45,18 +52,12 @@ export const Game: FC = () => {
         startStopTimer();
     };
 
-    const handleResetTimer = () => {
-        if (openNewGame) return;
-        resetTimer();
-    };
-
     return (
         <div className="game" style={gameStyle}>
             <GameHeader>
                 <Timer
                     {...{ counter, isOn }}
                     startStopTimer={handleStartStopTimer}
-                    resetTimer={handleResetTimer}
                 />
                 <CheckGameButton checkGame={checkGame} />
                 <SelectNewGameButton
@@ -74,6 +75,7 @@ export const Game: FC = () => {
                     openNewGame={openNewGame}
                     openCloseNewGameMessage={openCloseNewGameMessage}
                     handleSelectNewGame={handleSelectNewGame}
+                    endGame={endGame}
                 />
                 <GameController
                     changeCell={changeCell}

@@ -21,6 +21,7 @@ export type GameHook = (difficulty?: 'easy' | 'medium' | 'hard') => {
     checkGame: () => void;
     wrongCells: { rowIndex: number; columnIndex: number }[];
     generateNewGame: (newDifficulty?: 'easy' | 'medium' | 'hard') => void;
+    endGame: boolean;
 };
 
 export const useGame: GameHook = (difficulty = 'easy') => {
@@ -35,6 +36,7 @@ export const useGame: GameHook = (difficulty = 'easy') => {
     const [wrongCells, setWrongCells] = useState<
         { rowIndex: number; columnIndex: number }[]
     >([]);
+    const [endGame, setEndGame] = useState(false);
     const puzzleAsGrid: string[][] = sudoku.board_string_to_grid(
         puzzle.replaceAll('.', ' '),
     );
@@ -60,10 +62,18 @@ export const useGame: GameHook = (difficulty = 'easy') => {
 
         setPuzzle(newPuzzleState);
 
-        const newSolvedPuzzle = sudoku.solve(puzzle);
+        const newSolvedPuzzle: string = sudoku.solve(puzzle);
 
         if (newSolvedPuzzle) {
             setSolvedPuzzle(newSolvedPuzzle);
+
+            const shouldEndGame = newPuzzleState
+                .split('')
+                .every((value, index) => value === newSolvedPuzzle[index]);
+
+            if (shouldEndGame) {
+                setEndGame(shouldEndGame);
+            }
         }
     };
 
@@ -93,6 +103,7 @@ export const useGame: GameHook = (difficulty = 'easy') => {
         setSolvedPuzzle(sudoku.solve(newPuzzle));
         setImmutableIndexes(() => getImmutableIndexes(newPuzzle));
         setWrongCells([]);
+        setEndGame(false);
     };
 
     return {
@@ -101,5 +112,6 @@ export const useGame: GameHook = (difficulty = 'easy') => {
         checkGame,
         wrongCells,
         generateNewGame,
+        endGame,
     };
 };

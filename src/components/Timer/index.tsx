@@ -4,14 +4,9 @@ import { format } from 'date-fns';
 import './style.css';
 import { useTimer } from './hooks';
 
-export type TimerProps = ReturnType<typeof useTimer>;
+export type TimerProps = Omit<ReturnType<typeof useTimer>, 'resetTimer'>;
 
-export const Timer: FC<TimerProps> = ({
-    counter,
-    startStopTimer,
-    resetTimer,
-    isOn,
-}) => {
+export const Timer: FC<TimerProps> = ({ counter, startStopTimer, isOn }) => {
     return (
         <div id="game-info" style={gameInfoStyle}>
             <div id="timer" style={timerStyle}>
@@ -27,13 +22,6 @@ export const Timer: FC<TimerProps> = ({
                     onClick={startStopTimer}
                 >
                     {isOn ? 'Stop' : 'Start'}
-                </button>
-                <button
-                    id="reset-btn"
-                    style={timerButtonStyle}
-                    onClick={resetTimer}
-                >
-                    Reset
                 </button>
             </div>
         </div>
